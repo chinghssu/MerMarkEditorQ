@@ -31,6 +31,18 @@
 
 ---
 
+## ⚠️ Czym ten fork różni się od oryginału
+
+To jest osobisty, dostosowany fork projektu [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor). Całe uznanie za oryginalny projekt należy do [Vesperino](https://github.com/Vesperino). Ten fork jest udostępniany na licencji MIT — zobacz [LICENSE](LICENSE).
+
+Zmiany względem wersji oryginalnej:
+
+- **Dodano obsługę równań matematycznych** — matematyka w treści i blokowa (`$...$`, `$$...$$`) renderowana przez KaTeX, czego oryginał nie obsługuje.
+- **Zmieniono sposób eksportu PDF** — oryginalny eksport PDF oparty na drukowaniu nie renderował poprawnie równań, więc ten fork generuje pliki PDF bezpośrednio przez `wkhtmltopdf`, aby równania wyglądały prawidłowo. ⚠️ Oznacza to, że do eksportu PDF musi być zainstalowany [`wkhtmltopdf`](https://wkhtmltopdf.org/).
+- **Naprawiono obramowania tabel w PDF** — pogrubiono linie siatki tabel, które wcześniej były zbyt cienkie, by były widoczne w PDF.
+
+---
+
 ## Dlaczego MerMark Editor?
 
 **MerMark Editor** łączy prostotę Markdown z mocą diagramów Mermaid w pięknej, natywnej aplikacji desktopowej. Idealny dla programistów, autorów dokumentacji technicznej i każdego, kto potrzebuje tworzyć dokumentację z diagramami przepływu, sekwencji i innymi wizualizacjami.

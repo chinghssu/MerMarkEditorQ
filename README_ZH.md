@@ -1,26 +1,26 @@
 <p align="center">
-  <img src="assets/mermark-banner.jpeg" alt="MerMark Editor - Mermaid Markdown 编辑器" width="600">
+  <img src="assets/mermark-banner.jpeg" alt="MerMark Editor - Mermaid Markdown 編輯器" width="600">
 </p>
 
 <p align="center">
-  <strong>现代化、开源的 Markdown 编辑器，内置 Mermaid 图表支持</strong>
+  <strong>現代化、開源的 Markdown 編輯器，內建 Mermaid 圖表支援</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/v/release/Vesperino/MerMarkEditor?style=flat" alt="发布"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Vesperino/MerMarkEditor?style=flat" alt="许可证"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/stargazers"><img src="https://img.shields.io/github/stars/Vesperino/MerMarkEditor?style=flat" alt="星标"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/downloads/Vesperino/MerMarkEditor/total?style=flat&color=brightgreen&cacheSeconds=300" alt="下载量"></a>
-  <a href="https://buymeacoffee.com/vesperinio"><img src="https://img.shields.io/badge/%E8%AF%B7%E6%88%91%E5%96%9D%E5%92%96%E5%95%A1-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="请我喝咖啡"></a>
+  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/v/release/Vesperino/MerMarkEditor?style=flat" alt="發布"></a>
+  <a href="https://github.com/Vesperino/MerMarkEditor/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Vesperino/MerMarkEditor?style=flat" alt="授權條款"></a>
+  <a href="https://github.com/Vesperino/MerMarkEditor/stargazers"><img src="https://img.shields.io/github/stars/Vesperino/MerMarkEditor?style=flat" alt="星標"></a>
+  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/downloads/Vesperino/MerMarkEditor/total?style=flat&color=brightgreen&cacheSeconds=300" alt="下載量"></a>
+  <a href="https://buymeacoffee.com/vesperinio"><img src="https://img.shields.io/badge/%E8%AB%8B%E6%88%91%E5%96%9D%E5%92%96%E5%95%A1-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="請我喝咖啡"></a>
 </p>
 
 <p align="center">
-  <a href="#本地-ai-助手">AI 助手</a> •
+  <a href="#本機-ai-助手">AI 助手</a> •
   <a href="#功能">功能</a> •
-  <a href="#截图">截图</a> •
-  <a href="#安装">安装</a> •
+  <a href="#截圖">截圖</a> •
+  <a href="#安裝">安裝</a> •
   <a href="#使用">使用</a> •
-  <a href="#开发">开发</a>
+  <a href="#開發">開發</a>
 </p>
 
 <p align="center">
@@ -31,189 +31,197 @@
 
 ---
 
-> **说明：** 本仓库是 [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor) 的个人客制化分支（fork），加入了个人修改（例如 KaTeX 数学公式支持、PDF 导出调整等）。原始项目的所有功劳归 [Vesperino](https://github.com/Vesperino) 所有。本项目依 MIT 授权发布，详见 [LICENSE](LICENSE)。
+## ⚠️ 本分支與原版的差異
+
+本儲存庫是 [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor) 的個人客製化分支（fork）。原始專案的所有功勞歸 [Vesperino](https://github.com/Vesperino) 所有，本分支依 MIT 授權發布，詳見 [LICENSE](LICENSE)。
+
+相對於原版，本分支做了以下修改：
+
+- **植入數學方程式支援** — 透過 KaTeX 渲染行內與區塊數學公式（`$...$`、`$$...$$`），原版不支援。
+- **修改 PDF 的輸出方式** — 因為原版的列印式 PDF 輸出無法正確呈現數學方程式，本分支改用 `wkhtmltopdf` 直接產生 PDF，讓方程式能正確輸出。⚠️ 因此需在系統中安裝 [`wkhtmltopdf`](https://wkhtmltopdf.org/) 才能匯出 PDF。
+- **修正 PDF 表格格線** — 加粗表格邊框，避免格線過細在 PDF 中幾乎看不見。
 
 ---
 
-## 为什么选择 MerMark Editor？
+## 為什麼選擇 MerMark Editor？
 
-**MerMark Editor** 将 Markdown 的简洁性与 Mermaid 图表的强大功能融合在一个精美的原生桌面应用中。非常适合开发者、技术作者，以及任何需要使用流程图、时序图和其他可视化内容编写文档的人。
+**MerMark Editor** 將 Markdown 的簡潔性與 Mermaid 圖表的強大功能融合在一個精美的原生桌面應用程式中。非常適合開發者、技術文件撰寫者，以及任何需要使用流程圖、循序圖和其他視覺化內容來撰寫文件的人。
 
-### 主要优势
+### 主要優勢
 
-- **无云端依赖** - 文档完全保留在你的电脑上
-- **原生性能** - 基于 Tauri 构建，快速且轻量
-- **所见即所得编辑** - 边输入边查看格式化内容
-- **Mermaid 集成** - 直接在文档中创建图表
-- **多根工作区** - 打开一个或多个文件夹；AI 自动将其作为只读上下文范围
-- **本地 AI 助手** - 与 Claude 或 Codex 对话来处理你的笔记，AI 会直接编辑文件
-- **跨平台** - 支持 Windows、macOS 和 Linux
+- **無雲端依賴** - 文件完全保留在你的電腦上
+- **原生效能** - 基於 Tauri 建置，快速且輕量
+- **所見即所得編輯** - 邊輸入邊檢視格式化後的內容
+- **Mermaid 整合** - 直接在文件中建立圖表
+- **多根工作區** - 開啟一個或多個資料夾；AI 會自動將其作為唯讀的上下文範圍
+- **本機 AI 助手** - 與 Claude 或 Codex 對話來處理你的筆記，AI 會直接編輯檔案
+- **跨平台** - 支援 Windows、macOS 和 Linux
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.6/ui-light-mode.png" alt="MerMark — Minimal 主题与工作区侧栏" width="48%" />
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.6/ui-with-ai-panel.png" alt="MerMark — 同样的布局，AI 助手停靠在右侧" width="48%" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.6/ui-light-mode.png" alt="MerMark — Minimal 主題與工作區側欄" width="48%" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.6/ui-with-ai-panel.png" alt="MerMark — 同樣的版面，AI 助手停靠在右側" width="48%" />
 </p>
 
 ---
 
-## 本地 AI 助手
+## 本機 AI 助手
 
-如果你已经在为 **Claude Code** 或 **OpenAI Codex** 付费 — 或两者都有 — MerMark 直接把这份订阅接进编辑器。AI 面板使用你已经登录的 `claude` 和 `codex` CLI，每次请求都走你已经付费的账户。无需生成 API 密钥。无需第二份账单。你和服务商之间没有任何代理。
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/ai-panel-overview.png" alt="AI 面板概览" />
-  <br>
-  <em>AI 面板停靠在编辑器旁，包含模型选择器、会话下拉、固定的片段以及实时上下文使用条</em>
-</p>
-
-### 使用你已有的订阅
-
-- **Claude Code 或 Codex 的 Pro/Plus 计划** — MerMark 使用该登录，无需额外账户。
-- **无需管理 API 令牌** — CLI 处理鉴权，MerMark 永远看不到你的密钥。
-- **直连服务商** — 请求从你的机器直接到 Anthropic 或 OpenAI；中间没有任何中间人。
-- **零遥测** — 除了你自己也能在终端运行的 CLI 调用，编辑器不会再泄露任何数据。
-- **逐轮切换提供商** — 一条聊天选 Claude，下一条选 Codex；两者都在同一个面板里配置好。
-
-### 它能做什么
-
-- **直接编辑你的 markdown** — "用更友好的语气重写这一段"、"提取行动项"、"翻译成英文"。原子地写入磁盘；编辑器自动重新加载。
-- **跨你授权的文件夹读取** — 在访问图中指向项目文件夹，AI 就能看到昨天的笔记、术语表、风格指南。
-- **修改同级文件** — 把长文档拆成多份笔记、在源文件旁生成摘要、为某个文件夹建立 TOC 文件。
-- **搜索网络** — 打开 `network` 工具开关，需要新信息时启用。
-- **执行 shell 命令** — 可选的 `bash` 开关，用于 grep 笔记、运行构建或任何终端任务。默认关闭。
-- **每次 AI 写入自动生成快照** — 结果不满意时一键 **撤销**。
-
-### 多片段选择与图片附件
-
-- 在 Visual *和* Code 视图中固定一个或多个高亮片段。
-- AI 只会收到这些片段，而不是整篇文档。
-- 关闭 **Send** 可以保留固定片段但本次不发送。
-- 粘贴截图（`Ctrl+V`）、拖放图片，或从磁盘选择文件。
-- 每张图最大 8 MB，支持 png / jpg / gif / webp / bmp。
-- Claude 和 Codex 都能看到图片。
-- 已发送的图片以缩略图形式保留在聊天记录里 — 你能清楚记得传过什么。
+如果你已經在為 **Claude Code** 或 **OpenAI Codex** 付費 — 或兩者都有 — MerMark 直接把這份訂閱接進編輯器。AI 面板使用你已經登入的 `claude` 和 `codex` CLI，每次請求都走你已經付費的帳戶。無需產生 API 金鑰。無需第二份帳單。你和服務商之間沒有任何代理。
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/pin-multi-fragments.png" alt="固定多个片段" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/ai-panel-overview.png" alt="AI 面板概覽" />
   <br>
-  <em>发送前固定多个高亮片段 — 每个片段都以编号 chip 的形式出现在 composer 里</em>
+  <em>AI 面板停靠在編輯器旁，包含模型選擇器、工作階段下拉選單、釘選的片段以及即時的上下文用量列</em>
 </p>
 
-### 工具调用在聊天中可见
+### 使用你已有的訂閱
 
-- 模型调用的每个工具都以虚线 chip 的形式内联显示在记录里。
-- chip 上带有工具名以及参数的一行预览。
-- 点击展开格式化的 JSON 完整调用视图。
-- 涵盖 Read、Edit、Write、Bash、WebFetch、codex shell — 全部覆盖。
+- **Claude Code 或 Codex 的 Pro/Plus 方案** — MerMark 使用該登入，無需額外帳戶。
+- **無需管理 API 權杖** — CLI 處理驗證，MerMark 永遠看不到你的金鑰。
+- **直連服務商** — 請求從你的機器直接送到 Anthropic 或 OpenAI；中間沒有任何中間人。
+- **零遙測** — 除了你自己也能在終端機執行的 CLI 呼叫之外，編輯器不會再外洩任何資料。
+- **逐輪切換供應商** — 一則聊天選 Claude，下一則選 Codex；兩者都在同一個面板裡設定好。
+
+### 它能做什麼
+
+- **直接編輯你的 markdown** — 「用更友善的語氣重寫這一段」、「擷取行動項」、「翻譯成英文」。會原子化地寫入磁碟；編輯器自動重新載入。
+- **跨你授權的資料夾讀取** — 在存取圖中指向專案資料夾，AI 就能看到昨天的筆記、術語表、風格指南。
+- **修改同層檔案** — 把長文件拆成多份筆記、在原始檔旁產生摘要、為某個資料夾建立 TOC 檔。
+- **搜尋網路** — 開啟 `network` 工具開關，需要新資訊時啟用。
+- **執行 shell 指令** — 可選的 `bash` 開關，用於 grep 筆記、執行建置或任何終端機任務。預設關閉。
+- **每次 AI 寫入自動產生快照** — 結果不滿意時一鍵 **復原**。
+
+### 多片段選擇與圖片附件
+
+- 在 Visual *和* Code 檢視中釘選一個或多個標示的片段。
+- AI 只會收到這些片段，而不是整篇文件。
+- 關閉 **Send** 可以保留釘選的片段但本次不送出。
+- 貼上截圖（`Ctrl+V`）、拖放圖片，或從磁碟選擇檔案。
+- 每張圖最大 8 MB，支援 png / jpg / gif / webp / bmp。
+- Claude 和 Codex 都能看到圖片。
+- 已送出的圖片以縮圖形式保留在聊天記錄裡 — 你能清楚記得傳過什麼。
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/tool-chips.png" alt="工具调用 chip" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/pin-multi-fragments.png" alt="釘選多個片段" />
   <br>
-  <em>AI 使用的每个工具（Read、Edit、Write、Bash、WebFetch ……）都会作为可展开的 chip 内联显示</em>
+  <em>送出前釘選多個標示的片段 — 每個片段都以編號 chip 的形式出現在 composer 裡</em>
 </p>
 
-### 每文档独立会话，并完整恢复上下文
+### 工具呼叫在聊天中可見
 
-- 每个文档都有自己的可滚动会话历史。
-- **+** 归档当前对话并新开一个。
-- 每个文档最多 50 个会话，存储在 `localStorage` 中。
-- 重新打开旧会话会恢复你之前使用的 CLI、模型和推理强度。
-
-### 安全性、可审计性、按文档的访问控制
-
-- 每文档独立的访问图：明确的读路径、写路径、工具开关。
-- 通过 **+ File** 添加文件，**+ Folder** 添加整个文件夹。
-- 编辑前快照自动轮转（默认 3 个 + 已固定），一键 **撤销**。
-- 状态栏指示器：绿色 / 红色 / 闪烁红色（bypass 启用）。
-- 仅追加的审计日志记录每一次 AI 操作，可在 Settings 中查看。
+- 模型呼叫的每個工具都以虛線 chip 的形式行內顯示在記錄裡。
+- chip 上帶有工具名以及參數的一行預覽。
+- 點擊展開格式化的 JSON 完整呼叫檢視。
+- 涵蓋 Read、Edit、Write、Bash、WebFetch、codex shell — 全部涵蓋。
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/access-map.png" alt="访问图编辑器" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/tool-chips.png" alt="工具呼叫 chip" />
   <br>
-  <em>每文档访问图 — 显式的读 / 写路径加上工具开关</em>
+  <em>AI 使用的每個工具（Read、Edit、Write、Bash、WebFetch ……）都會作為可展開的 chip 行內顯示</em>
+</p>
+
+### 每份文件獨立工作階段，並完整恢復上下文
+
+- 每份文件都有自己的可捲動工作階段歷史。
+- **+** 封存目前的對話並新開一個。
+- 每份文件最多 50 個工作階段，儲存在 `localStorage` 中。
+- 重新開啟舊工作階段會還原你之前使用的 CLI、模型和推理強度。
+
+### 安全性、可稽核性、依文件的存取控制
+
+- 每份文件獨立的存取圖：明確的讀取路徑、寫入路徑、工具開關。
+- 透過 **+ File** 加入檔案，**+ Folder** 加入整個資料夾。
+- 編輯前快照自動輪替（預設 3 個 + 已釘選），一鍵 **復原**。
+- 狀態列指示器：綠色 / 紅色 / 閃爍紅色（bypass 啟用）。
+- 僅附加的稽核日誌記錄每一次 AI 操作，可在 Settings 中查看。
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/access-map.png" alt="存取圖編輯器" />
+  <br>
+  <em>每份文件存取圖 — 明確的讀取 / 寫入路徑加上工具開關</em>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/snapshots.png" alt="快照历史" />
+  <img src="https://raw.githubusercontent.com/Vesperino/MerMarkEditor/master/docs/release-notes/v0.2.0/snapshots.png" alt="快照歷史" />
   <br>
-  <em>快照历史 — 还原、固定、导出或删除编辑前的版本</em>
+  <em>快照歷史 — 還原、釘選、匯出或刪除編輯前的版本</em>
 </p>
 
-### 两个提供商，一个面板
+### 兩個供應商，一個面板
 
-- 在聊天 header 中切换 `claude` / `codex`。
-- 每个 CLI 的默认设置会持久化（最近的模型、最近的 effort）。
-- Token 流式输出，第一段返回前显示思考指示器。
-- 分段上下文使用条 — input、cache、free — 直接来自 CLI 报告的用量。
-- 可点击链接通过编辑器的外链确认对话框打开。
-- 发送快捷键：`Ctrl+Enter`（Win/Linux）、`Cmd+Enter`（macOS）。
-- 最小化到侧边 tab、全屏、关闭 — 都在面板 header 里。
+- 在聊天 header 中切換 `claude` / `codex`。
+- 每個 CLI 的預設設定會持久化（最近的模型、最近的 effort）。
+- Token 串流輸出，第一段回傳前顯示思考指示器。
+- 分段的上下文用量列 — input、cache、free — 直接來自 CLI 回報的用量。
+- 可點擊的連結會透過編輯器的外部連結確認對話框開啟。
+- 送出快捷鍵：`Ctrl+Enter`（Win/Linux）、`Cmd+Enter`（macOS）。
+- 最小化到側邊 tab、全螢幕、關閉 — 都在面板 header 裡。
 
-### 在 Mermaid 图表中使用 AI
+### 在 Mermaid 圖表中使用 AI
 
-- 在任意图表（或全屏编辑）中点击 **AI** — 主面板自动将图表源码作为只读上下文固定，并把 preamble 切换到 mermaid-edit 模式。
-- 同一个面板、同一个模型选择器、同一种你处理散文时使用的多轮对话。
-- 每条助手回复都会被解析出 `mermaid` 代码块，并实时渲染替代已保存的图表。
-- 面板 chip 中显示 **Apply ✓ / Discard × / Stop** 按钮；Apply 提交到节点，Discard 继续迭代，Stop 结束会话。
+- 在任意圖表（或全螢幕編輯）中點擊 **AI** — 主面板會自動將圖表原始碼作為唯讀上下文釘選，並把 preamble 切換到 mermaid-edit 模式。
+- 同一個面板、同一個模型選擇器、同一種你處理散文時使用的多輪對話。
+- 每則助手回覆都會被解析出 `mermaid` 程式碼區塊，並即時渲染來取代已儲存的圖表。
+- 面板 chip 中顯示 **Apply ✓ / Discard × / Stop** 按鈕；Apply 套用到節點，Discard 繼續迭代，Stop 結束工作階段。
 
-完整功能列表 — 包含快照轮转、崩溃会话的 tmp 恢复、多窗口安全的流式输出和按 CLI 隔离会话 — 详见 [RELEASE_NOTES.md](RELEASE_NOTES.md)。
+完整功能列表 — 包含快照輪替、當機工作階段的 tmp 復原、多視窗安全的串流輸出以及依 CLI 隔離工作階段 — 詳見 [RELEASE_NOTES.md](RELEASE_NOTES.md)。
 
 ---
 
 ## 功能
 
-### Markdown 编辑
-- 完整支持 **GitHub Flavored Markdown** (GFM)
-- **WYSIWYG 编辑器** 带实时预览
-- 代码块**语法高亮**（50+ 种语言）
-- 表格、任务列表、引用块等
-- **键盘快捷键** 提高编辑效率
-- **可配置内边距** — Settings 中的顶部、两侧、底部滑块
+### Markdown 編輯
+- 完整支援 **GitHub Flavored Markdown** (GFM)
+- **WYSIWYG 編輯器** 帶即時預覽
+- 程式碼區塊**語法高亮**（50+ 種語言）
+- 表格、任務清單、引用區塊等
+- **鍵盤快捷鍵** 提高編輯效率
+- **可設定內距** — Settings 中的頂部、兩側、底部滑桿
 
-### Mermaid 图表
-- **流程图**、**时序图**、**类图**、**状态图**、**ER 图**、**甘特图**、**饼图** 以及许多其他图表类型
-- **可调整大小** - 拖动右侧边缘设置自定义宽度（持久化到 markdown）
-- **可调整分屏** - 全屏编辑中拖动代码与预览面板之间的分隔条
-- **AI 辅助** - 在任意图表上点击 AI，主 AI 面板将以图表为上下文接管
-- **快速模板** — flowchart / sequence / class / state / ER / Gantt / pie / mindmap 一键插入
+### Mermaid 圖表
+- **流程圖**、**循序圖**、**類別圖**、**狀態圖**、**ER 圖**、**甘特圖**、**圓餅圖** 以及許多其他圖表類型
+- **可調整大小** - 拖曳右側邊緣設定自訂寬度（持久化到 markdown）
+- **可調整分割** - 全螢幕編輯中拖曳程式碼與預覽面板之間的分隔條
+- **AI 輔助** - 在任意圖表上點擊 AI，主 AI 面板會以圖表為上下文接手
+- **快速範本** — flowchart / sequence / class / state / ER / Gantt / pie / mindmap 一鍵插入
 
-### 工作区
-- **多根侧栏** — 打开一个或多个文件夹；每个都有自己的可折叠区段，包含独立的文件树
-- **文件树** — 展开 / 折叠文件夹、在标签中打开文件、OS 级 reveal、重命名、删除、新建文件 / 文件夹
-- **AI 看到工作区** — 工作区根目录自动作为只读范围加入 AI preamble
-- **快速切换器**（`Ctrl+Shift+E`）— 工作区、文件、活动工作区中的全文 grep
-- **拖动重新排序** 工作区；展开的文件夹在会话之间保留
+### 工作區
+- **多根側欄** — 開啟一個或多個資料夾；每個都有自己的可摺疊區段，包含獨立的檔案樹
+- **檔案樹** — 展開 / 摺疊資料夾、在分頁中開啟檔案、OS 層級 reveal、重新命名、刪除、新增檔案 / 資料夾
+- **AI 看得到工作區** — 工作區根目錄會自動作為唯讀範圍加入 AI preamble
+- **快速切換器**（`Ctrl+Shift+E`）— 工作區、檔案、作用中工作區中的全文 grep
+- **拖曳重新排序** 工作區；展開的資料夾會在工作階段之間保留
 
-### 导出与集成
-- **导出 PDF** — 接近所见即所得：与编辑器相同的衬线字体和缩放、带语法高亮的代码块、coral 行内代码、根据内容自适应的表格
-- **保存为 Markdown** (.md 文件)，简洁可移植
-- 编辑器内边距设置会转换成 PDF 边距
+### 匯出與整合
+- **匯出 PDF** — 接近所見即所得：與編輯器相同的襯線字體和縮放、帶語法高亮的程式碼區塊、coral 行內程式碼、依內容自適應的表格
+- **儲存為 Markdown** (.md 檔案)，簡潔可攜帶
+- 編輯器內距設定會轉換成 PDF 邊距
 
-### 用户体验
-- **标签 + pin / context menu** — Pin / Unpin / Close / Close others / Close all but pinned / Close saved
-- **深色 / 浅色主题** 加上 **Minimal 主题变体**（Mermaid 标志色：teal + coral 配 slate）
-- **Word 风格的缩放滑块** 在状态栏 — `±` 按钮 + 百分比读数
-- **字符 / 单词 / 行 / token 计数器** 作为单一可移动单元
-- **样式化的 prompt / confirm 对话框** 全程使用（不再有原生浏览器弹窗）
-- **自动保存** - 不会丢失工作
-- **多语言界面** - 英语、波兰语、中文
-- **快捷键速查模态** - 所有快捷键的快速参考 (`Ctrl+/`)
+### 使用者體驗
+- **分頁 + 釘選 / 右鍵選單** — Pin / Unpin / Close / Close others / Close all but pinned / Close saved
+- **深色 / 淺色主題** 加上 **Minimal 主題變體**（Mermaid 標誌色：teal + coral 配 slate）
+- **Word 風格的縮放滑桿** 在狀態列 — `±` 按鈕 + 百分比讀數
+- **字元 / 字數 / 行數 / token 計數器** 作為單一可移動單元
+- **樣式化的 prompt / confirm 對話框** 全程使用（不再有原生瀏覽器彈出視窗）
+- **自動儲存** - 不會遺失工作成果
+- **多語言介面** - 英文、波蘭文、中文
+- **快捷鍵速查視窗** - 所有快捷鍵的快速參考 (`Ctrl+/`)
 
-### 高级功能
-- **分屏视图** - 并排编辑两个文档，分屏比例可调
-- **标签对比** - 左右两个面板文档的 diff 比较 (`Ctrl+Shift+C`)
-- **变更追踪** - 查看自上次保存以来的所有改动 (`Ctrl+Shift+D`)
-- **代码视图** - 在可视化 WYSIWYG 与原始 Markdown 之间切换，并跟踪光标位置
-- **AI Token 计数器** - 估算 GPT (OpenAI)、Claude (Anthropic) 和 Gemini (Google) 的 token 数
-- **多窗口支持** - 打开多个独立的编辑器窗口
-- **跨窗口标签管理** - 在面板与窗口之间拖放标签
-- **文件监听** - 自动检测外部文件变更并重新加载内容
-- **冲突检测** - 当本地与外部都有改动时显示内联 diff
-- **手动重新加载** - 通过 `Ctrl+R` 从磁盘重新加载文件
+### 進階功能
+- **分割畫面檢視** - 並排編輯兩份文件，分割比例可調
+- **分頁對比** - 左右兩個面板文件的 diff 比較 (`Ctrl+Shift+C`)
+- **變更追蹤** - 查看自上次儲存以來的所有改動 (`Ctrl+Shift+D`)
+- **程式碼檢視** - 在視覺化 WYSIWYG 與原始 Markdown 之間切換，並追蹤游標位置
+- **AI Token 計數器** - 估算 GPT (OpenAI)、Claude (Anthropic) 和 Gemini (Google) 的 token 數
+- **多視窗支援** - 開啟多個獨立的編輯器視窗
+- **跨視窗分頁管理** - 在面板與視窗之間拖放分頁
+- **檔案監聽** - 自動偵測外部檔案變更並重新載入內容
+- **衝突偵測** - 當本機與外部都有改動時顯示行內 diff
+- **手動重新載入** - 透過 `Ctrl+R` 從磁碟重新載入檔案
 
 ---
 
-## 截图
+## 截圖
 
 <p align="center">
 <img width="3835" height="2071" alt="深色模式" src="https://github.com/user-attachments/assets/6dae5f4b-28b0-4803-9f07-9ac8b71581bb" />
@@ -222,270 +230,270 @@
 </p>
 
 <p align="center">
-<img width="3837" height="2071" alt="简洁界面" src="https://github.com/user-attachments/assets/ce4bbd47-5df3-445a-af3a-b13cadf5db3f" />
+<img width="3837" height="2071" alt="簡潔介面" src="https://github.com/user-attachments/assets/ce4bbd47-5df3-445a-af3a-b13cadf5db3f" />
   <br>
-  <em>简洁、极简的界面，配以直观的工具栏</em>
+  <em>簡潔、極簡的介面，配以直觀的工具列</em>
 </p>
 
 <p align="center">
-<img width="3840" height="2078" alt="多标签编辑" src="https://github.com/user-attachments/assets/f8e5ef5b-bc36-45b6-8019-29c22f9aee48" />
+<img width="3840" height="2078" alt="多分頁編輯" src="https://github.com/user-attachments/assets/f8e5ef5b-bc36-45b6-8019-29c22f9aee48" />
   <br>
-  <em>多标签编辑、格式化文档与可点击的目录</em>
+  <em>多分頁編輯、格式化文件與可點擊的目錄</em>
 </p>
 
 <p align="center">
-  <img width="3828" height="2075" alt="C4 架构图" src="https://github.com/user-attachments/assets/8d911a3a-e5e6-40dc-8d17-7e624a8c17c9" />
+  <img width="3828" height="2075" alt="C4 架構圖" src="https://github.com/user-attachments/assets/8d911a3a-e5e6-40dc-8d17-7e624a8c17c9" />
   <br>
-  <em>带缩放控件和全屏模式的 C4 架构图</em>
+  <em>帶縮放控制項和全螢幕模式的 C4 架構圖</em>
 </p>
 
 <p align="center">
- <img width="3820" height="2038" alt="全屏图表视图" src="https://github.com/user-attachments/assets/21d560c1-25bd-41a0-b1ed-83e356ff26d3" />
+ <img width="3820" height="2038" alt="全螢幕圖表檢視" src="https://github.com/user-attachments/assets/21d560c1-25bd-41a0-b1ed-83e356ff26d3" />
   <br>
-  <em>带 400% 缩放的全屏图表视图，便于细节查看</em>
+  <em>帶 400% 縮放的全螢幕圖表檢視，便於細節查看</em>
 </p>
 
 <p align="center">
-  <img width="1578" height="742" alt="代码与文档" src="https://github.com/user-attachments/assets/5969be85-95a1-4199-a378-cfeb6075c48d" />
+  <img width="1578" height="742" alt="程式碼與文件" src="https://github.com/user-attachments/assets/5969be85-95a1-4199-a378-cfeb6075c48d" />
   <br>
-  <em>带代码块和嵌入图表的技术文档</em>
+  <em>帶程式碼區塊和嵌入圖表的技術文件</em>
 </p>
 
 <p align="center">
-<img width="3831" height="2081" alt="分屏视图" src="https://github.com/user-attachments/assets/6fb41a24-958e-42c6-a56a-81ecf0d72a9d" />
+<img width="3831" height="2081" alt="分割畫面檢視" src="https://github.com/user-attachments/assets/6fb41a24-958e-42c6-a56a-81ecf0d72a9d" />
   <br>
-  <em>用于同时编辑两个文档的分屏视图</em>
+  <em>用於同時編輯兩份文件的分割畫面檢視</em>
 </p>
 
 <p align="center">
-<img width="3830" height="2072" alt="标签对比" src="https://github.com/user-attachments/assets/804dfb96-9d84-4bd6-ad3d-b6d0a8dbca06" />
+<img width="3830" height="2072" alt="分頁對比" src="https://github.com/user-attachments/assets/804dfb96-9d84-4bd6-ad3d-b6d0a8dbca06" />
   <br>
-  <em>并排比较文档，按行高亮 diff</em>
+  <em>並排比較文件，逐行高亮 diff</em>
 </p>
 
 <p align="center">
-<img width="3822" height="2073" alt="变更追踪" src="https://github.com/user-attachments/assets/e4d2fcc5-d1a4-41f0-b7c7-16a389801206" />
+<img width="3822" height="2073" alt="變更追蹤" src="https://github.com/user-attachments/assets/e4d2fcc5-d1a4-41f0-b7c7-16a389801206" />
   <br>
-  <em>查看自上次保存以来的所有改动，包括新增和删除</em>
+  <em>查看自上次儲存以來的所有改動，包括新增和刪除</em>
 </p>
 
 <p align="center">
-<img width="3836" height="2076" alt="代码视图" src="https://github.com/user-attachments/assets/c4823de1-4b66-4065-8c66-15b184d8619e" />
+<img width="3836" height="2076" alt="程式碼檢視" src="https://github.com/user-attachments/assets/c4823de1-4b66-4065-8c66-15b184d8619e" />
   <br>
-  <em>在可视化与 Markdown 代码视图间切换，并跟踪光标</em>
+  <em>在視覺化與 Markdown 程式碼檢視間切換，並追蹤游標</em>
 </p>
 
 <p align="center">
-<img width="3834" height="1633" alt="键盘快捷键" src="https://github.com/user-attachments/assets/4594b71c-cb50-479d-ba8c-dd053efd34db" />
+<img width="3834" height="1633" alt="鍵盤快捷鍵" src="https://github.com/user-attachments/assets/4594b71c-cb50-479d-ba8c-dd053efd34db" />
   <br>
-  <em>所有键盘快捷键的快速参考 (Ctrl+/)</em>
+  <em>所有鍵盤快捷鍵的快速參考 (Ctrl+/)</em>
 </p>
 
 <p align="center">
-<img width="829" height="306" alt="AI Token 计数器" src="https://github.com/user-attachments/assets/8ffcf467-f02a-41e2-bda6-dda4fa44322d" />
+<img width="829" height="306" alt="AI Token 計數器" src="https://github.com/user-attachments/assets/8ffcf467-f02a-41e2-bda6-dda4fa44322d" />
   <br>
-  <em>支持模型选择的 AI Token 计数器（GPT、Claude、Gemini）</em>
+  <em>支援模型選擇的 AI Token 計數器（GPT、Claude、Gemini）</em>
 </p>
 
 <p align="center">
-<img width="3019" height="1565" alt="多窗口" src="https://github.com/user-attachments/assets/a28effaa-3e5b-4a9b-8b58-7fb4f4053d15" />
+<img width="3019" height="1565" alt="多視窗" src="https://github.com/user-attachments/assets/a28effaa-3e5b-4a9b-8b58-7fb4f4053d15" />
   <br>
-  <em>支持跨窗口拖放标签的多窗口编辑</em>
+  <em>支援跨視窗拖放分頁的多視窗編輯</em>
 </p>
 
 ---
 
-## 安装
+## 安裝
 
-### 下载
+### 下載
 
-从 [发布页面](https://github.com/Vesperino/MerMarkEditor/releases) 下载最新版本。
+從 [發布頁面](https://github.com/Vesperino/MerMarkEditor/releases) 下載最新版本。
 
-| 平台    | 下载                                                                                          |
+| 平台    | 下載                                                                                          |
 |---------|-----------------------------------------------------------------------------------------------|
-| Windows | [.exe / .msi 安装程序](https://github.com/Vesperino/MerMarkEditor/releases/latest)             |
+| Windows | [.exe / .msi 安裝程式](https://github.com/Vesperino/MerMarkEditor/releases/latest)             |
 | macOS   | [.dmg（通用：Apple Silicon + Intel）](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
 | Linux   | [.deb / .AppImage](https://github.com/Vesperino/MerMarkEditor/releases/latest)                |
 
-### 重要说明
+### 重要說明
 
-本应用是开源软件且未进行代码签名。操作系统在首次启动时可能会显示安全警告：
+本應用程式是開源軟體且未進行程式碼簽署。作業系統在首次啟動時可能會顯示安全警告：
 
-- **Windows**（SmartScreen）：点击「更多信息」→「仍要运行」
-- **macOS**：右键点击应用 →「打开」→「打开」绕过 Gatekeeper
+- **Windows**（SmartScreen）：點擊「更多資訊」→「仍要執行」
+- **macOS**：右鍵點擊應用程式 →「打開」→「打開」以略過 Gatekeeper
 
-这是开源软件在没有付费代码签名证书的情况下分发时的标准行为。本仓库中的源代码完全可供审阅。
+這是開源軟體在沒有付費程式碼簽署憑證的情況下散布時的標準行為。本儲存庫中的原始碼完全可供審閱。
 
-### 系统需求
+### 系統需求
 
-- **Windows**：Windows 10 或更高版本（64 位）
-- **macOS**：macOS 10.15 (Catalina) 或更高版本
+- **Windows**：Windows 10 或更新版本（64 位元）
+- **macOS**：macOS 10.15 (Catalina) 或更新版本
 - **Linux**：Ubuntu 22.04+ 或同等版本（需要 WebKitGTK 4.1）
 
 ---
 
 ## 使用
 
-### 基本编辑
+### 基本編輯
 
-1. **打开文件**：`Ctrl+O`（macOS 上为 `Cmd+O`）
-2. **保存**：`Ctrl+S`（保存为 Markdown）
-3. **另存为**：`Ctrl+Shift+S`
-4. **导出 PDF**：点击工具栏中的 PDF 按钮
+1. **開啟檔案**：`Ctrl+O`（macOS 上為 `Cmd+O`）
+2. **儲存**：`Ctrl+S`（儲存為 Markdown）
+3. **另存新檔**：`Ctrl+Shift+S`
+4. **匯出 PDF**：點擊工具列中的 PDF 按鈕
 
-### 键盘快捷键
+### 鍵盤快捷鍵
 
-| 操作 | 快捷键 |
+| 操作 | 快捷鍵 |
 |------|--------|
-| 新建文件 | `Ctrl+N` |
-| 打开文件 | `Ctrl+O` |
-| 保存 | `Ctrl+S` |
-| 另存为 | `Ctrl+Shift+S` |
-| 导出 PDF | `Ctrl+P` |
-| 撤销 | `Ctrl+Z` |
+| 新增檔案 | `Ctrl+N` |
+| 開啟檔案 | `Ctrl+O` |
+| 儲存 | `Ctrl+S` |
+| 另存新檔 | `Ctrl+Shift+S` |
+| 匯出 PDF | `Ctrl+P` |
+| 復原 | `Ctrl+Z` |
 | 重做 | `Ctrl+Y` |
-| 加粗 | `Ctrl+B` |
-| 斜体 | `Ctrl+I` |
-| 显示变更 | `Ctrl+Shift+D` |
-| 标签对比 | `Ctrl+Shift+C` |
-| 重新加载文件 | `Ctrl+R` |
-| 关闭标签 | `Ctrl+W` |
-| 下一个标签 | `Ctrl+Tab` |
-| 上一个标签 | `Ctrl+Shift+Tab` |
-| 跳到标签 1–9 | `Ctrl+1` … `Ctrl+9` |
-| 切换 代码 / 可视化 视图 | `Ctrl+Shift+V` |
-| 放大 / 缩小 | `Ctrl++` / `Ctrl+-` |
-| 重置缩放 | `Ctrl+0` |
-| 设置 | `Ctrl+,` |
-| 键盘快捷键 | `Ctrl+/` |
-| 关闭模态 | `Escape` |
+| 粗體 | `Ctrl+B` |
+| 斜體 | `Ctrl+I` |
+| 顯示變更 | `Ctrl+Shift+D` |
+| 分頁對比 | `Ctrl+Shift+C` |
+| 重新載入檔案 | `Ctrl+R` |
+| 關閉分頁 | `Ctrl+W` |
+| 下一個分頁 | `Ctrl+Tab` |
+| 上一個分頁 | `Ctrl+Shift+Tab` |
+| 跳到分頁 1–9 | `Ctrl+1` … `Ctrl+9` |
+| 切換 程式碼 / 視覺化 檢視 | `Ctrl+Shift+V` |
+| 放大 / 縮小 | `Ctrl++` / `Ctrl+-` |
+| 重置縮放 | `Ctrl+0` |
+| 設定 | `Ctrl+,` |
+| 鍵盤快捷鍵 | `Ctrl+/` |
+| 關閉對話框 | `Escape` |
 
-> 在 macOS 上，使用 `⌘`（Cmd）替代 `Ctrl`。
+> 在 macOS 上，使用 `⌘`（Cmd）取代 `Ctrl`。
 
-### 创建 Mermaid 图表
+### 建立 Mermaid 圖表
 
-点击工具栏中的 **Mermaid** 按钮或键入：
+點擊工具列中的 **Mermaid** 按鈕或輸入：
 
 ~~~markdown
 ```mermaid
 graph LR
-    A[开始] --> B[处理]
-    B --> C[结束]
+    A[開始] --> B[處理]
+    B --> C[結束]
 ```
 ~~~
 
-这会创建一个流程图：
+這會建立一個流程圖：
 
 ```
-[开始] --> [处理] --> [结束]
+[開始] --> [處理] --> [結束]
 ```
 
-### 支持的图表类型
+### 支援的圖表類型
 
-- `graph` / `flowchart` - 流程图
-- `sequenceDiagram` - 时序图
-- `classDiagram` - 类图
-- `stateDiagram-v2` - 状态图
-- `erDiagram` - 实体关系图
-- `gantt` - 甘特图
-- `pie` - 饼图
-- `journey` - 用户旅程图
-- `gitgraph` - Git 图
-- `mindmap` - 思维导图
-- `timeline` - 时间线
+- `graph` / `flowchart` - 流程圖
+- `sequenceDiagram` - 循序圖
+- `classDiagram` - 類別圖
+- `stateDiagram-v2` - 狀態圖
+- `erDiagram` - 實體關係圖
+- `gantt` - 甘特圖
+- `pie` - 圓餅圖
+- `journey` - 使用者旅程圖
+- `gitgraph` - Git 圖
+- `mindmap` - 心智圖
+- `timeline` - 時間軸
 
 ---
 
-## 开发
+## 開發
 
-### 前置条件
+### 前置需求
 
 - [Node.js](https://nodejs.org/) 18+
-- [Rust](https://rustup.rs/)（用于 Tauri）
-- [pnpm](https://pnpm.io/)（推荐）
+- [Rust](https://rustup.rs/)（用於 Tauri）
+- [pnpm](https://pnpm.io/)（建議）
 
-### 配置
+### 設定
 
 ```bash
-# 克隆仓库
+# 複製儲存庫
 git clone https://github.com/Vesperino/MerMarkEditor.git
 cd MerMarkEditor
 
-# 安装依赖
+# 安裝相依套件
 pnpm install
 
-# 开发模式运行
+# 開發模式執行
 pnpm tauri dev
 
-# 生产构建
+# 生產建置
 pnpm tauri build
 ```
 
-### 运行测试
+### 執行測試
 
 ```bash
-# 运行测试
+# 執行測試
 pnpm test
 
-# 运行一次测试
+# 執行一次測試
 pnpm test:run
 ```
 
-### 技术栈
+### 技術堆疊
 
 - **前端**：Vue 3 + TypeScript
-- **编辑器**：TipTap（基于 ProseMirror）
-- **图表**：Mermaid.js
+- **編輯器**：TipTap（基於 ProseMirror）
+- **圖表**：Mermaid.js
 - **桌面**：Tauri 2.0
-- **构建**：Vite
+- **建置**：Vite
 
 ---
 
-## 贡献
+## 貢獻
 
-欢迎贡献！请随时提交 Pull Request。
+歡迎貢獻！請隨時提交 Pull Request。
 
-1. Fork 仓库
-2. 创建你的功能分支（`git checkout -b feature/AmazingFeature`）
+1. Fork 儲存庫
+2. 建立你的功能分支（`git checkout -b feature/AmazingFeature`）
 3. 提交你的修改（`git commit -m 'Add some AmazingFeature'`）
 4. 推送到分支（`git push origin feature/AmazingFeature`）
-5. 开启一个 Pull Request
+5. 開啟一個 Pull Request
 
 ---
 
-## 许可证
+## 授權條款
 
-本项目基于 **MIT 许可证** - 详情请参阅 [LICENSE](LICENSE) 文件。
-
----
-
-## 致谢
-
-- [Codycody31](https://github.com/Codycody31) - 非常感谢对 macOS 与 Linux 的支持！
-- [TipTap](https://tiptap.dev/) - Headless 编辑器框架
-- [Mermaid](https://mermaid.js.org/) - 图表与流程图工具
-- [Tauri](https://tauri.app/) - 桌面应用框架
-- [Vue.js](https://vuejs.org/) - 渐进式 JavaScript 框架
+本專案基於 **MIT 授權條款** - 詳情請參閱 [LICENSE](LICENSE) 檔案。
 
 ---
 
-## 支持
+## 致謝
 
-MerMark 现在以及未来都将基于 MIT 许可证保持免费与开源。如果你觉得这个项目有用，欢迎：
+- [Codycody31](https://github.com/Codycody31) - 非常感謝對 macOS 與 Linux 的支援！
+- [TipTap](https://tiptap.dev/) - Headless 編輯器框架
+- [Mermaid](https://mermaid.js.org/) - 圖表與流程圖工具
+- [Tauri](https://tauri.app/) - 桌面應用程式框架
+- [Vue.js](https://vuejs.org/) - 漸進式 JavaScript 框架
 
-- 在 GitHub 上点亮星标
-- 报告 bug 与提出新功能建议
-- 为代码库做出贡献
-- [请我喝杯咖啡](https://buymeacoffee.com/vesperinio) — 完全自愿，如果 MerMark 帮你节省了时间，可以这样表示感谢
+---
+
+## 支援
+
+MerMark 現在以及未來都將基於 MIT 授權條款保持免費與開源。如果你覺得這個專案有用，歡迎：
+
+- 在 GitHub 上點亮星標
+- 回報 bug 與提出新功能建議
+- 為程式碼庫做出貢獻
+- [請我喝杯咖啡](https://buymeacoffee.com/vesperinio) — 完全自願，如果 MerMark 幫你節省了時間，可以這樣表示感謝
 
 <p align="center">
   <a href="https://buymeacoffee.com/vesperinio">
-    <img src="https://img.shields.io/badge/%E8%AF%B7%E6%88%91%E5%96%9D%E5%92%96%E5%95%A1-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="请我喝咖啡" />
+    <img src="https://img.shields.io/badge/%E8%AB%8B%E6%88%91%E5%96%9D%E5%92%96%E5%95%A1-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="請我喝咖啡" />
   </a>
 </p>
 
 ---
 
 <p align="center">
-  由 <a href="https://github.com/Vesperino">Vesperino</a> 用 ❤️ 制作
+  由 <a href="https://github.com/Vesperino">Vesperino</a> 用 ❤️ 製作
 </p>

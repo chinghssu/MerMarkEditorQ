@@ -31,7 +31,15 @@
 
 ---
 
-> **Note:** This is a customized fork of [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor) with personal modifications (e.g. KaTeX math support and PDF export tweaks). All credit for the original project goes to [Vesperino](https://github.com/Vesperino). Licensed under MIT — see [LICENSE](LICENSE).
+## ⚠️ How this fork differs from the original
+
+This is a personal customized fork of [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor). All credit for the original project goes to [Vesperino](https://github.com/Vesperino). This fork is released under the MIT license — see [LICENSE](LICENSE).
+
+Changes relative to the upstream version:
+
+- **Added math equation support** — inline and block math (`$...$`, `$$...$$`) rendered via KaTeX, which the original does not support.
+- **Changed the PDF output method** — the original's print-based PDF export could not render math equations correctly, so this fork generates PDFs directly via `wkhtmltopdf` so equations come out right. ⚠️ This means [`wkhtmltopdf`](https://wkhtmltopdf.org/) must be installed on your system to export PDFs.
+- **Fixed PDF table borders** — thickened table gridlines, which were previously too thin to be visible in the PDF.
 
 ---
 
