@@ -66,6 +66,12 @@ const zhCN: Translations = {
   mermaid: 'Mermaid',
   insertMermaid: '插入 Mermaid 图表',
 
+  // Toolbar - KaTeX math
+  katexBlock: '区块公式',
+  katexInline: '行内公式',
+  insertKatexBlock: '插入区块数学公式 ($$...$$)',
+  insertKatexInline: '插入行内数学公式 ($...$)',
+
   // Toolbar - Footnotes
   footnote: '脚注',
   insertFootnote: '插入脚注',

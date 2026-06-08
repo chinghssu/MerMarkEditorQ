@@ -199,6 +199,15 @@ export function useToolbarActions() {
     runCommand((e) => (e.commands as any).insertMermaid());
   };
 
+  // KaTeX math
+  const insertKatexBlock = () => {
+    runCommand((e) => (e.commands as any).insertKatexBlock());
+  };
+
+  const insertKatexInline = () => {
+    runCommand((e) => (e.commands as any).insertKatexInline());
+  };
+
   // Footnote — chain().focus() preserves selection after toolbar click steals focus
   const insertFootnote = () => {
     runCommand((e) => (e.chain() as any).focus().insertFootnote().run());
@@ -260,6 +269,10 @@ export function useToolbarActions() {
 
     // Mermaid
     insertMermaid,
+
+    // KaTeX
+    insertKatexBlock,
+    insertKatexInline,
 
     // Footnote
     insertFootnote,

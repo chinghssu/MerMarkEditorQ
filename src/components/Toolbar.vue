@@ -29,7 +29,6 @@ const emit = defineEmits<{
   saveFile: [];
   saveFileAs: [];
   exportPdf: [];
-  exportDocx: [];
   toggleCodeView: [];
   toggleSplit: [];
   toggleSplitEditor: [];
@@ -53,7 +52,7 @@ const needsSeparator = (index: number) => {
 
 // Check if we need a spacer before this item (after editing tools, before stats/zoom/toggles)
 const spacerCategories = new Set(['stats', 'zoom', 'view-toggles']);
-const editingCategories = new Set(['file-ops', 'edit-history', 'headings', 'text-format', 'lists', 'blocks', 'links-media', 'table', 'mermaid']);
+const editingCategories = new Set(['file-ops', 'edit-history', 'headings', 'text-format', 'lists', 'blocks', 'links-media', 'table', 'mermaid', 'katex']);
 
 const needsSpacerBefore = (index: number) => {
   if (index === 0) return false;
@@ -94,7 +93,6 @@ const needsSpacerBefore = (index: number) => {
           @save-file="emit('saveFile')"
           @save-file-as="emit('saveFileAs')"
           @export-pdf="emit('exportPdf')"
-          @export-docx="emit('exportDocx')"
           @toggle-code-view="emit('toggleCodeView')"
           @toggle-split="emit('toggleSplit')"
           @toggle-split-editor="emit('toggleSplitEditor')"

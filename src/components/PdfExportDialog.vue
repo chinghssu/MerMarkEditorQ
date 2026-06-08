@@ -292,7 +292,7 @@
 
       <div class="pdf-actions">
         <button class="pdf-btn pdf-btn--secondary" data-testid="pdf-close" @click="$emit('close')">{{ t.pdfBtnClose }}</button>
-        <button class="pdf-btn pdf-btn--primary" data-testid="pdf-confirm" @click="handlePrint">
+        <button class="pdf-btn pdf-btn--primary" data-testid="pdf-confirm" :disabled="isExporting" @click="handlePrint">
           {{ t.pdfBtnPrint }}
         </button>
       </div>
@@ -326,6 +326,7 @@ import {
   loadPdfSettings,
   savePdfSettings,
   buildPrintDocument,
+  exportPdfFromHtml,
   SYSTEM_FONTS,
   getFontStack,
   type PdfSettings,
@@ -351,6 +352,7 @@ type TabId = 'layout' | 'typography' | 'header' | 'toc' | 'watermark';
 
 const activeTab = ref<TabId>('layout');
 const previewFrame = ref<HTMLIFrameElement | null>(null);
+const isExporting = ref(false);
 const settings = reactive<PdfSettings>(loadPdfSettings());
 
 const serifFonts = computed(() => SYSTEM_FONTS.filter(f => f.category === 'serif'));
@@ -465,9 +467,19 @@ onBeforeUnmount(() => {
   if (writeTimer) clearTimeout(writeTimer);
 });
 
-function handlePrint() {
-  savePdfSettings({ ...settings });
-  previewFrame.value?.contentWindow?.print();
+async function handlePrint() {
+  if (isExporting.value) return;
+  isExporting.value = true;
+  try {
+    savePdfSettings({ ...settings });
+    if (writeTimer) {
+      clearTimeout(writeTimer);
+      writeTimer = null;
+    }
+    await exportPdfFromHtml(props.contentHtml, { ...settings }, props.meta ?? {});
+  } finally {
+    isExporting.value = false;
+  }
 }
 </script>
 

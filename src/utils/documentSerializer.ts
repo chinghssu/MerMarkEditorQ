@@ -1,3 +1,5 @@
+import katex from 'katex';
+
 const STRIP_ATTRS = [
   'contenteditable',
   'data-node-view-wrapper',
@@ -294,6 +296,50 @@ function inlineMermaidSvgs(clone: HTMLElement): void {
   }
 }
 
+function renderKatexFormula(formula: string, displayMode: boolean): HTMLElement {
+  const wrapper = document.createElement(displayMode ? 'div' : 'span');
+  wrapper.className = displayMode ? 'katex-print katex-print-block' : 'katex-print katex-print-inline';
+  try {
+    wrapper.innerHTML = katex.renderToString(formula, {
+      displayMode,
+      throwOnError: false,
+    });
+  } catch {
+    wrapper.textContent = formula;
+    wrapper.classList.add('katex-print-error');
+  }
+  return wrapper;
+}
+
+function normalizeKatexNodes(root: HTMLElement): void {
+  const nodes = Array.from(root.querySelectorAll<HTMLElement>(
+    '[data-type="katex-block"], [data-type="katex-inline"], .katex-wrapper',
+  ));
+  for (const node of nodes) {
+    const isBlock = node.getAttribute('data-type') === 'katex-block'
+      || node.classList.contains('katex-block');
+    const isInline = node.getAttribute('data-type') === 'katex-inline'
+      || node.classList.contains('katex-inline');
+    if (!isBlock && !isInline) continue;
+
+    const encodedFormula = node.getAttribute('data-formula');
+    let formula = '';
+    if (encodedFormula) {
+      try {
+        formula = decodeURIComponent(encodedFormula);
+      } catch {
+        formula = encodedFormula;
+      }
+    }
+    if (!formula) {
+      formula = node.querySelector('annotation[encoding="application/x-tex"]')?.textContent?.trim() ?? '';
+    }
+    if (!formula) continue;
+
+    node.replaceWith(renderKatexFormula(formula, isBlock));
+  }
+}
+
 /**
  * Slugify a heading label for use as an HTML id. Lowercase, ASCII letters/digits
  * only, hyphens for separators. Collisions resolved by `-2`, `-3` suffixes via
@@ -424,6 +470,7 @@ export function linkifyFootnotes(root: HTMLElement): void {
 export function serializeEditorContent(editorEl: HTMLElement): string {
   const clone = editorEl.cloneNode(true) as HTMLElement;
   inlineMermaidSvgs(clone);
+  normalizeKatexNodes(clone);
   inlineTaskCheckboxes(clone);
   normalizeFootnoteSection(clone);
   assignHeadingIds(clone);

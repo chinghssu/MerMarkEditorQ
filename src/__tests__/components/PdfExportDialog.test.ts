@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import * as pdfExport from '../../composables/usePdfExport';
 import PdfExportDialog from '../../components/PdfExportDialog.vue';
 
 const CONTENT_HTML = '<p>Test</p>';
@@ -7,6 +8,8 @@ const CONTENT_HTML = '<p>Test</p>';
 describe('PdfExportDialog', () => {
   beforeEach(() => {
     localStorage.clear();
+    vi.restoreAllMocks();
+    vi.spyOn(pdfExport, 'exportPdfFromHtml').mockResolvedValue(undefined);
   });
 
   it('renders without crashing', () => {
@@ -38,6 +41,17 @@ describe('PdfExportDialog', () => {
     const raw = localStorage.getItem('mermark.pdfSettings');
     expect(raw).toBeTruthy();
     expect(JSON.parse(raw!).fontSize).toBe('12pt');
+  });
+
+  it('calls the wkhtmltopdf export helper when print button is clicked', async () => {
+    const wrapper = mount(PdfExportDialog, { props: { contentHtml: CONTENT_HTML } });
+    await wrapper.find('[data-testid="pdf-confirm"]').trigger('click');
+
+    expect(pdfExport.exportPdfFromHtml).toHaveBeenCalledWith(
+      CONTENT_HTML,
+      expect.any(Object),
+      expect.any(Object),
+    );
   });
 
   it('switches to Typography tab and shows font family selector', async () => {

@@ -277,6 +277,42 @@ img {
   break-inside: avoid;
 }
 
+/* ===== KaTeX math ===== */
+.katex-print {
+  max-width: 100%;
+  color: #1a1a1a;
+}
+
+.katex-print-block {
+  display: block;
+  margin: 0.75em 0;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  overflow: visible;
+}
+
+.katex-print-inline {
+  display: inline;
+}
+
+.katex-print .katex-display {
+  margin: 0;
+  max-width: 100%;
+  overflow: visible;
+  white-space: normal;
+}
+
+.katex-print .katex-html {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.katex-print-error {
+  font-family: "Fira Code", "JetBrains Mono", Consolas, monospace;
+  color: #b91c1c;
+}
+
 /* ===== Mermaid diagrams ===== */
 .mermaid-print-figure {
   margin: 0.8em 0;

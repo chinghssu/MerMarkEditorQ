@@ -59,7 +59,6 @@ import { isImageFile } from './utils/image-file-utils';
 import { t } from './i18n';
 import PdfExportDialog from './components/PdfExportDialog.vue';
 import { usePdfExport } from './composables/usePdfExport';
-import { useDocxExport } from './composables/useDocxExport';
 import { serializeEditorContent } from './utils/documentSerializer';
 import { DOM_SELECTORS } from './constants';
 
@@ -494,7 +493,6 @@ const {
 const showPdfDialog = ref(false);
 const pdfContentHtml = ref('');
 const pdfMeta = ref<{ title?: string; path?: string; date?: string }>({});
-const { exportDocx } = useDocxExport();
 usePdfExport();
 
 function openPdfDialog() {
@@ -502,8 +500,20 @@ function openPdfDialog() {
     document.querySelector<HTMLElement>(
       `${DOM_SELECTORS.ACTIVE_EDITOR_CONTAINER} .ProseMirror`,
     ) ?? document.querySelector<HTMLElement>('.ProseMirror');
-  if (!editorEl) return;
-  pdfContentHtml.value = serializeEditorContent(editorEl);
+  if (editorEl) {
+    pdfContentHtml.value = serializeEditorContent(editorEl);
+  } else {
+    const fallback = document.createElement('div');
+    const markdownSource = splitEditorActive.value
+      ? splitMarkdownSource.value
+      : codeView.value
+        ? codeContent.value
+        : null;
+    fallback.innerHTML = markdownSource
+      ? markdownToHtml(markdownSource)
+      : activeTab.value?.content ?? '<p></p>';
+    pdfContentHtml.value = serializeEditorContent(fallback);
+  }
   const tab = activeTab.value;
   const fileName = tab?.fileName ?? '';
   const filePath = tab?.filePath ?? '';
@@ -1717,7 +1727,6 @@ onUnmounted(async () => {
       @save-file="saveFile"
       @save-file-as="saveFileAs"
       @export-pdf="openPdfDialog"
-      @export-docx="exportDocx"
       @toggle-code-view="toggleCodeView"
       @toggle-split="toggleSplit"
       @toggle-split-editor="toggleSplitEditor"
@@ -1759,7 +1768,6 @@ onUnmounted(async () => {
         @save-file="saveFile"
         @save-file-as="saveFileAs"
         @export-pdf="openPdfDialog"
-        @export-docx="exportDocx"
         @toggle-code-view="toggleCodeView"
         @toggle-split="toggleSplit"
         @toggle-diff-preview="toggleDiffPreview"
@@ -1860,7 +1868,6 @@ onUnmounted(async () => {
       @save-file="saveFile"
       @save-file-as="saveFileAs"
       @export-pdf="openPdfDialog"
-      @export-docx="exportDocx"
       @toggle-code-view="toggleCodeView"
       @toggle-split="toggleSplit"
       @toggle-split-editor="toggleSplitEditor"

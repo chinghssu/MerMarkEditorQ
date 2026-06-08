@@ -72,6 +72,12 @@ export interface Translations {
   mermaid: string;
   insertMermaid: string;
 
+  // Toolbar - KaTeX math
+  katexBlock: string;
+  katexInline: string;
+  insertKatexBlock: string;
+  insertKatexInline: string;
+
   // Toolbar - Footnotes
   footnote: string;
   insertFootnote: string;

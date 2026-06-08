@@ -47,6 +47,22 @@ describe('serializeEditorContent', () => {
     expect(result).toContain('<p>Second</p>');
   });
 
+  it('renders KaTeX node views as clean formula HTML for print', () => {
+    const el = document.createElement('div');
+    el.innerHTML = `
+      <div class="katex-wrapper katex-block" data-type="katex-block" data-formula="${encodeURIComponent('E = mc^2')}">
+        <span class="katex-render"></span>
+        <span class="katex-actions"><button>Edit</button><button>Delete</button></span>
+      </div>
+    `;
+    const result = serializeEditorContent(el);
+    expect(result).toContain('katex-print-block');
+    expect(result).toContain('katex');
+    expect(result).toContain('E');
+    expect(result).not.toContain('katex-actions');
+    expect(result).not.toContain('button');
+  });
+
   it('handles mermaid node with no SVG (render failed) gracefully', () => {
     const el = document.createElement('div');
     const mermaidWrapper = document.createElement('div');

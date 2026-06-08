@@ -53,6 +53,16 @@
       "allow": [{ "path": "**" }]
     },
     "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "wkhtmltopdf",
+          "cmd": "wkhtmltopdf",
+          "args": true
+        }
+      ]
+    },
     "deep-link:default",
     "updater:default",
     "process:default",

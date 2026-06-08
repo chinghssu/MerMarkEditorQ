@@ -56,6 +56,30 @@ export function htmlToMarkdown(
 
   const protectedBlocks: string[] = [];
 
+  // KaTeX block math — extract before any other processing
+  md = md.replace(/<div[^>]*data-type=["']katex-block["'][^>]*>[\s\S]*?<\/div>/gi, (match) => {
+    const formulaMatch = match.match(/data-formula=["']([^"']*)["']/i);
+    if (formulaMatch) {
+      const formula = decodeURIComponent(formulaMatch[1]);
+      const placeholder = `__PROTECTED_BLOCK_${protectedBlocks.length}__`;
+      protectedBlocks.push(`\n$$\n${formula}\n$$\n`);
+      return placeholder;
+    }
+    return '';
+  });
+
+  // KaTeX inline math
+  md = md.replace(/<span[^>]*data-type=["']katex-inline["'][^>]*>[\s\S]*?<\/span>/gi, (match) => {
+    const formulaMatch = match.match(/data-formula=["']([^"']*)["']/i);
+    if (formulaMatch) {
+      const formula = decodeURIComponent(formulaMatch[1]);
+      const placeholder = `__PROTECTED_BLOCK_${protectedBlocks.length}__`;
+      protectedBlocks.push(`$${formula}$`);
+      return placeholder;
+    }
+    return '';
+  });
+
   // Mermaid blocks - extract first.
   // Attributes the user can adjust per-diagram (e.g. dragged width, print
   // scale) are serialized into an HTML comment on the line preceding the

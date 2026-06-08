@@ -10,6 +10,7 @@ export type ToolbarItemCategory =
   | 'links-media'
   | 'table'
   | 'mermaid'
+  | 'katex'
   | 'footnote'
   | 'stats'
   | 'zoom'
@@ -36,7 +37,6 @@ export const TOOLBAR_ITEMS: ToolbarItemDef[] = [
   { id: 'save-file', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 30, needsEditor: false, labelKey: 'save' },
   { id: 'save-file-as', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 40, needsEditor: false, labelKey: 'saveAs' },
   { id: 'export-pdf', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 50, needsEditor: false, labelKey: 'exportPdf' },
-  { id: 'export-docx', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 51, needsEditor: false, labelKey: 'exportDocx' },
   { id: 'show-shortcuts', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 60, needsEditor: false, labelKey: 'keyboardShortcuts' },
   { id: 'show-settings', category: 'file-ops', defaultZone: 'toolbar', defaultOrder: 70, needsEditor: false, labelKey: 'settings' },
 
@@ -73,6 +73,10 @@ export const TOOLBAR_ITEMS: ToolbarItemDef[] = [
 
   // Mermaid
   { id: 'mermaid', category: 'mermaid', defaultZone: 'toolbar', defaultOrder: 800, needsEditor: true, labelKey: 'mermaid' },
+
+  // KaTeX math
+  { id: 'katex-block', category: 'katex', defaultZone: 'toolbar', defaultOrder: 810, needsEditor: true, labelKey: 'katexBlock' },
+  { id: 'katex-inline', category: 'katex', defaultZone: 'toolbar', defaultOrder: 815, needsEditor: true, labelKey: 'katexInline' },
 
   // Footnote
   { id: 'footnote', category: 'footnote', defaultZone: 'toolbar', defaultOrder: 850, needsEditor: true, labelKey: 'footnote' },

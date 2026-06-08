@@ -1,7 +1,19 @@
 import { serializeEditorContent } from '../utils/documentSerializer';
 import printCssRaw from '../styles/print.css?raw';
+import katexCssRaw from 'katex/dist/katex.min.css?raw';
+import katex from 'katex';
 import { DOM_SELECTORS } from '../constants';
 import { t } from '../i18n';
+import { save as saveDialog, message as dialogMessage } from '@tauri-apps/plugin-dialog';
+import { writeTextFile, remove } from '@tauri-apps/plugin-fs';
+import { Command } from '@tauri-apps/plugin-shell';
+import { join, tempDir } from '@tauri-apps/api/path';
+
+const bundledKatexFontUrls = import.meta.glob('/node_modules/katex/dist/fonts/*', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
 
 export type FontCategory = 'serif' | 'sans' | 'mono';
 export type PageNumberFormat = 'n' | 'n-of-total' | 'page-n-of-total';
@@ -191,6 +203,59 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
+function decodeMaybeUriComponent(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function renderKatexFormulaElement(doc: Document, formula: string, displayMode: boolean): HTMLElement {
+  const wrapper = doc.createElement(displayMode ? 'div' : 'span');
+  wrapper.className = displayMode ? 'katex-print katex-print-block' : 'katex-print katex-print-inline';
+  try {
+    wrapper.innerHTML = katex.renderToString(formula, {
+      displayMode,
+      throwOnError: false,
+    });
+  } catch {
+    wrapper.textContent = formula;
+    wrapper.classList.add('katex-print-error');
+  }
+  return wrapper;
+}
+
+export function normalizePdfContentHtml(contentHtml: string): string {
+  if (!/(data-type=["']katex-|katex-wrapper)/i.test(contentHtml)) return contentHtml;
+
+  const doc = new DOMParser().parseFromString(`<div>${contentHtml}</div>`, 'text/html');
+  const root = doc.body.firstElementChild;
+  if (!root) return contentHtml;
+
+  const nodes = Array.from(root.querySelectorAll<HTMLElement>(
+    '[data-type="katex-block"], [data-type="katex-inline"], .katex-wrapper',
+  ));
+
+  for (const node of nodes) {
+    const isBlock = node.getAttribute('data-type') === 'katex-block'
+      || node.classList.contains('katex-block');
+    const isInline = node.getAttribute('data-type') === 'katex-inline'
+      || node.classList.contains('katex-inline');
+    if (!isBlock && !isInline) continue;
+
+    const encodedFormula = node.getAttribute('data-formula') ?? '';
+    const formula = encodedFormula
+      ? decodeMaybeUriComponent(encodedFormula)
+      : node.querySelector('annotation[encoding="application/x-tex"]')?.textContent?.trim() ?? '';
+    if (!formula) continue;
+
+    node.replaceWith(renderKatexFormulaElement(doc, formula, isBlock));
+  }
+
+  return root.innerHTML;
+}
+
 /**
  * Build a CSS `content:` value for an @page margin box.
  * Substitutes {title}, {date}, {path}, {page}, {pages}.
@@ -339,6 +404,7 @@ export function buildPrintDocument(
   printCss: string,
   meta: DocumentMeta = {},
 ): string {
+  const normalizedContentHtml = normalizePdfContentHtml(contentHtml);
   const m = resolveMargins(settings);
   const bodyFont = getFontStack(settings.fontFamily);
   const headingFont = getFontStack(settings.headingFontFamily);
@@ -350,7 +416,7 @@ export function buildPrintDocument(
   const previewHeader = buildPreviewHeaderHtml(settings.header, meta, 'pdf-preview-header');
   const previewFooter = buildPreviewHeaderHtml(settings.footer, meta, 'pdf-preview-footer');
   const previewPgNum = buildPreviewPageNumberHtml(settings);
-  const tocHtml = buildTocHtml(contentHtml, settings, t.value.pdfTocTitle);
+  const tocHtml = buildTocHtml(normalizedContentHtml, settings, t.value.pdfTocTitle);
   const startPage = Math.max(1, settings.startPageNumber | 0);
   const counterReset = startPage > 1 ? `body { counter-reset: page ${startPage - 1}; }` : '';
 
@@ -377,12 +443,250 @@ export function buildPrintDocument(
   --pf-margin-left: ${m.left};
 }
 ${counterReset}
+${katexCssRaw}
 ${printCss}
 ${watermarkCss}
 </style>
 </head>
-<body>${watermarkHtml}${previewHeader}${tocHtml}${contentHtml}${previewFooter}${previewPgNum}</body>
+<body>${watermarkHtml}${previewHeader}${tocHtml}${normalizedContentHtml}${previewFooter}${previewPgNum}</body>
 </html>`;
+}
+
+function getDocumentBaseDir(path?: string): string | null {
+  if (!path) return null;
+  const lastSlash = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+  return lastSlash > 0 ? path.substring(0, lastSlash) : null;
+}
+
+function resolveRelativePath(src: string, baseDir: string): string {
+  if (/^[a-zA-Z]:/.test(src) || src.startsWith('/')) return src;
+
+  let absolutePath = `${baseDir}/${src}`.replace(/\\/g, '/');
+  const parts = absolutePath.split('/');
+  const normalized: string[] = [];
+  for (const part of parts) {
+    if (part === '..') normalized.pop();
+    else if (part !== '.' && part !== '') normalized.push(part);
+  }
+  absolutePath = normalized.join('/');
+  if (/^[a-zA-Z]\//.test(absolutePath)) {
+    absolutePath = absolutePath.replace(/^([a-zA-Z])\//, '$1:/');
+  }
+  return absolutePath;
+}
+
+function toFileUrl(filePath: string): string {
+  const normalized = filePath.replace(/\\/g, '/');
+  if (/^file:\/\//i.test(normalized)) return normalized;
+  if (/^[a-zA-Z]:/.test(normalized)) return `file:///${encodeURI(normalized)}`;
+  if (normalized.startsWith('/')) return `file://${encodeURI(normalized)}`;
+  return `file://${encodeURI(normalized)}`;
+}
+
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ''));
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read blob'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+function normalizeAssetName(name: string): string {
+  const clean = name.split('?')[0].split('#')[0];
+  const dot = clean.lastIndexOf('.');
+  if (dot === -1) return clean;
+  const ext = clean.slice(dot);
+  const stem = clean.slice(0, dot);
+  const stripped = stem.replace(/-[a-f0-9]{6,}$/i, '');
+  return `${stripped}${ext}`;
+}
+
+function getUrlFilename(url: string): string | null {
+  const clean = url.split('?')[0].split('#')[0];
+  return clean.split('/').pop() || null;
+}
+
+function rememberFontUrl(urls: Map<string, string>, rawUrl: string, baseHref?: string): void {
+  if (!rawUrl || /^data:/i.test(rawUrl)) return;
+  const filename = getUrlFilename(rawUrl);
+  if (!filename) return;
+
+  let resolved = rawUrl;
+  try {
+    resolved = new URL(rawUrl, baseHref ?? document.baseURI).toString();
+  } catch {
+    // Keep the raw URL; fetch may still be able to resolve app-protocol URLs.
+  }
+
+  urls.set(filename, resolved);
+  urls.set(normalizeAssetName(filename), resolved);
+}
+
+async function collectKatexFontDataUrls(): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  const urls = new Map<string, string>();
+
+  for (const rawUrl of Object.values(bundledKatexFontUrls)) {
+    rememberFontUrl(urls, rawUrl);
+  }
+
+  if (typeof document !== 'undefined') {
+    for (const sheet of Array.from(document.styleSheets)) {
+      let rules: CSSRuleList;
+      try {
+        rules = sheet.cssRules;
+      } catch {
+        continue;
+      }
+
+      for (const rule of Array.from(rules)) {
+        const text = rule.cssText;
+        if (!text.includes('@font-face') || !text.includes('KaTeX')) continue;
+        for (const match of text.matchAll(/url\((['"]?)([^)'"]+)\1\)/g)) {
+          rememberFontUrl(urls, match[2], sheet.href ?? document.baseURI);
+        }
+      }
+    }
+  }
+
+  const dataUrlsByResolvedUrl = new Map<string, string>();
+  for (const [filename, resolvedUrl] of urls.entries()) {
+    try {
+      let dataUrl = dataUrlsByResolvedUrl.get(resolvedUrl);
+      if (!dataUrl) {
+        const response = await fetch(resolvedUrl);
+        if (!response.ok) continue;
+        dataUrl = await blobToDataUrl(await response.blob());
+        dataUrlsByResolvedUrl.set(resolvedUrl, dataUrl);
+      }
+      map.set(filename, dataUrl);
+      map.set(normalizeAssetName(filename), dataUrl);
+    } catch {
+      // Ignore fonts we cannot fetch; wkhtmltopdf will fall back to defaults.
+    }
+  }
+
+  return map;
+}
+
+async function inlineKatexFonts(html: string): Promise<string> {
+  const hasRenderedKatex = /<(?:div|span)[^>]*class=["'][^"']*(?:katex|katex-print)/i.test(html);
+  if (!hasRenderedKatex || !html.includes('url(')) return html;
+  const fontMap = await collectKatexFontDataUrls();
+
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const styles = Array.from(doc.querySelectorAll('style'));
+  for (const style of styles) {
+    const css = style.textContent ?? '';
+    if (!css.includes('@font-face') || !css.includes('KaTeX')) continue;
+    const nextCss = css.replace(/url\((['"]?)([^)'"]+)\1\)/g, (match, _quote, rawUrl: string) => {
+      if (/^data:/i.test(rawUrl)) return match;
+      const filename = rawUrl.split('/').pop() ?? rawUrl;
+      const dataUrl = fontMap.get(filename) ?? fontMap.get(normalizeAssetName(filename));
+      return `url("${dataUrl ?? 'data:application/octet-stream;base64,'}")`;
+    });
+    style.textContent = nextCss;
+  }
+
+  return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+}
+
+async function inlineImageSources(html: string, baseDir: string | null): Promise<string> {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  if (baseDir) {
+    const base = doc.createElement('base');
+    base.href = `${toFileUrl(baseDir.endsWith('/') ? baseDir : `${baseDir}/`)}`;
+    doc.head.prepend(base);
+  }
+  const images = Array.from(doc.querySelectorAll<HTMLImageElement>('img'));
+
+  for (const img of images) {
+    const src = img.getAttribute('src') ?? '';
+    const originalSrc = img.getAttribute('data-original-src') ?? '';
+    if (!src) continue;
+    if (/^data:/i.test(src) || /^https?:/i.test(src) || /^file:/i.test(src)) continue;
+
+    if (/^blob:/i.test(src)) {
+      if (originalSrc && !/^(https?:|data:|blob:|file:)/i.test(originalSrc) && baseDir) {
+        img.setAttribute('src', toFileUrl(resolveRelativePath(originalSrc, baseDir)));
+        continue;
+      }
+      try {
+        const response = await fetch(src);
+        if (response.ok) {
+          img.setAttribute('src', await blobToDataUrl(await response.blob()));
+          continue;
+        }
+      } catch {
+        // Fall through to original source handling if possible.
+      }
+    }
+
+    const candidate = originalSrc && !/^(https?:|data:|blob:|file:)/i.test(originalSrc)
+      ? originalSrc
+      : src;
+    if (baseDir) {
+      img.setAttribute('src', toFileUrl(resolveRelativePath(candidate, baseDir)));
+    }
+  }
+
+  return `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`;
+}
+
+async function buildWkhtmltopdfInputHtml(contentHtml: string, settings: PdfSettings, meta: DocumentMeta): Promise<string> {
+  const doc = buildPrintDocument(contentHtml, settings, printCssRaw, meta);
+  const baseDir = getDocumentBaseDir(meta.path);
+  let html = await inlineKatexFonts(doc);
+  html = await inlineImageSources(html, baseDir);
+  return html;
+}
+
+async function exportHtmlWithWkhtmltopdf(contentHtml: string, settings: PdfSettings, meta: DocumentMeta): Promise<void> {
+  savePdfSettings(settings);
+
+  const outputPath = await saveDialog({
+    filters: [{ name: 'PDF', extensions: ['pdf'] }],
+    defaultPath: `${(meta.title ?? 'document').replace(/[\\/]/g, '_')}.pdf`,
+  });
+
+  if (!outputPath) return;
+
+  const html = await buildWkhtmltopdfInputHtml(contentHtml, settings, meta);
+  const tempRoot = await tempDir();
+  const tempHtmlPath = await join(tempRoot, `mermark-pdf-${Date.now()}-${Math.random().toString(36).slice(2)}.html`);
+
+  await writeTextFile(tempHtmlPath, html);
+
+  try {
+    const output = await Command.create('wkhtmltopdf', [
+      '--encoding', 'utf-8',
+      '--print-media-type',
+      '--enable-local-file-access',
+      '--load-error-handling', 'ignore',
+      '--load-media-error-handling', 'ignore',
+      '--quiet',
+      tempHtmlPath,
+      outputPath,
+    ]).execute();
+
+    if (output.code !== 0) {
+      throw new Error(output.stderr || `wkhtmltopdf exited with code ${output.code}`);
+    }
+  } catch (error) {
+    console.error('Error exporting PDF:', error);
+    await dialogMessage(
+      error instanceof Error ? error.message : String(error),
+      { title: 'PDF export', kind: 'error' },
+    );
+    throw error;
+  } finally {
+    try {
+      await remove(tempHtmlPath);
+    } catch {
+      // ignore cleanup errors
+    }
+  }
 }
 
 function migrateSettings(parsed: Partial<PdfSettings>): PdfSettings {
@@ -471,4 +775,12 @@ export function usePdfExport() {
   }
 
   return { exportPdf };
+}
+
+export async function exportPdfFromHtml(
+  contentHtml: string,
+  settings: PdfSettings,
+  meta: DocumentMeta = {},
+): Promise<void> {
+  return exportHtmlWithWkhtmltopdf(contentHtml, settings, meta);
 }

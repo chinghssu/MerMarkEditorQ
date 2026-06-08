@@ -63,8 +63,10 @@
     "@tiptap/pm": "^3.15.3",
     "@tiptap/starter-kit": "^3.15.3",
     "@tiptap/vue-3": "^3.15.3",
+    "@types/katex": "^0.16.8",
     "diff": "^8.0.3",
     "docx": "^9.6.1",
+    "katex": "^0.17.0",
     "lowlight": "^3.3.0",
     "mermaid": "^11.12.3",
     "vue": "^3.5.13"

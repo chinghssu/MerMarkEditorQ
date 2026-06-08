@@ -1,10 +1,33 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+vi.mock('@tauri-apps/plugin-dialog', () => ({
+  save: vi.fn(),
+  message: vi.fn(),
+}));
+vi.mock('@tauri-apps/plugin-fs', () => ({
+  writeTextFile: vi.fn(),
+  remove: vi.fn(),
+}));
+vi.mock('@tauri-apps/plugin-shell', () => ({
+  Command: {
+    create: vi.fn(),
+  },
+}));
+vi.mock('@tauri-apps/api/path', () => ({
+  join: vi.fn(),
+  tempDir: vi.fn(),
+}));
 import {
   buildPrintDocument,
   buildHeaderFooterContent,
+  exportPdfFromHtml,
+  normalizePdfContentHtml,
   PDF_SETTINGS_DEFAULTS,
   type PdfSettings,
 } from '../../composables/usePdfExport';
+import { save as saveDialog } from '@tauri-apps/plugin-dialog';
+import { writeTextFile, remove } from '@tauri-apps/plugin-fs';
+import { Command } from '@tauri-apps/plugin-shell';
+import { join, tempDir } from '@tauri-apps/api/path';
 
 const FAKE_CSS = 'body { color: red; }';
 
@@ -17,6 +40,23 @@ function withSettings(overrides: Partial<PdfSettings>): PdfSettings {
     watermark: { ...PDF_SETTINGS_DEFAULTS.watermark, ...(overrides.watermark ?? {}) },
   };
 }
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.mocked(saveDialog).mockResolvedValue('/private/tmp/out.pdf');
+  vi.mocked(tempDir).mockResolvedValue('/private/tmp');
+  vi.mocked(join).mockImplementation(async (...parts: string[]) => parts.join('/'));
+  vi.mocked(writeTextFile).mockResolvedValue(undefined);
+  vi.mocked(remove).mockResolvedValue(undefined);
+  vi.mocked(Command.create).mockReturnValue({
+    execute: vi.fn().mockResolvedValue({
+      code: 0,
+      signal: null,
+      stdout: '',
+      stderr: '',
+    }),
+  } as never);
+});
 
 describe('buildPrintDocument', () => {
   it('produces valid HTML5 doctype', () => {
@@ -52,6 +92,28 @@ describe('buildPrintDocument', () => {
   it('embeds content HTML in body', () => {
     const html = buildPrintDocument('<p>hello world</p>', PDF_SETTINGS_DEFAULTS, FAKE_CSS);
     expect(html).toContain('<p>hello world</p>');
+  });
+
+  it('renders raw KaTeX data nodes before injecting content', () => {
+    const formula = encodeURIComponent('E = mc^2');
+    const html = buildPrintDocument(
+      `<div data-type="katex-block" data-formula="${formula}"></div>`,
+      PDF_SETTINGS_DEFAULTS,
+      FAKE_CSS,
+    );
+
+    expect(html).toContain('katex-print-block');
+    expect(html).toContain('E = mc^2');
+    expect(html).not.toContain('data-type="katex-block"');
+  });
+
+  it('keeps table markup in the print document', () => {
+    const content = '<table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table>';
+    const html = buildPrintDocument(content, PDF_SETTINGS_DEFAULTS, FAKE_CSS);
+
+    expect(html).toContain('<table>');
+    expect(html).toContain('<th>A</th>');
+    expect(html).toContain('<td>1</td>');
   });
 
   it('embeds accent color as CSS variable', () => {
@@ -151,6 +213,13 @@ describe('buildPrintDocument', () => {
   });
 });
 
+describe('normalizePdfContentHtml', () => {
+  it('leaves regular tables unchanged', () => {
+    const content = '<table><tbody><tr><td>Cell</td></tr></tbody></table>';
+    expect(normalizePdfContentHtml(content)).toBe(content);
+  });
+});
+
 describe('buildHeaderFooterContent', () => {
   it('returns empty quoted string for empty template', () => {
     expect(buildHeaderFooterContent('', {})).toBe('""');
@@ -186,5 +255,42 @@ describe('buildHeaderFooterContent', () => {
   it('escapes embedded double quotes in literals', () => {
     const r = buildHeaderFooterContent('say "hi"', {});
     expect(r).toContain('\\"hi\\"');
+  });
+});
+
+describe('exportPdfFromHtml', () => {
+  it('writes a temp HTML file and runs wkhtmltopdf', async () => {
+    await exportPdfFromHtml('<p>test</p>', PDF_SETTINGS_DEFAULTS, { title: 'My Doc' });
+
+    expect(saveDialog).toHaveBeenCalled();
+    expect(writeTextFile).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(writeTextFile).mock.calls[0][0]).toContain('/private/tmp/mermark-pdf-');
+    expect(Command.create).toHaveBeenCalledWith(
+      'wkhtmltopdf',
+      expect.arrayContaining([
+        '--enable-local-file-access',
+        '--load-error-handling',
+        'ignore',
+        '--load-media-error-handling',
+        '/private/tmp/out.pdf',
+      ]),
+    );
+    expect(remove).toHaveBeenCalledTimes(1);
+  });
+
+  it('writes rendered formulas and tables to the wkhtmltopdf input', async () => {
+    const formula = encodeURIComponent('a^2 + b^2 = c^2');
+    await exportPdfFromHtml(
+      `<div data-type="katex-block" data-formula="${formula}"></div><table><tbody><tr><td>Cell</td></tr></tbody></table>`,
+      PDF_SETTINGS_DEFAULTS,
+      { title: 'Math Table' },
+    );
+
+    const writtenHtml = vi.mocked(writeTextFile).mock.calls[0][1] as string;
+    expect(writtenHtml).toContain('katex-print-block');
+    expect(writtenHtml).toContain('a^2 + b^2 = c^2');
+    expect(writtenHtml).toContain('<table>');
+    expect(writtenHtml).toContain('<td>Cell</td>');
+    expect(writtenHtml).not.toContain('url(fonts/');
   });
 });

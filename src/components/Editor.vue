@@ -71,10 +71,12 @@ let imageResolutionInProgress = false;
 // HTML snapshot from last file open/save — used to detect real changes (e.g. after undo).
 let lastSavedHtml = '';
 import { MermaidExtension } from "../extensions/MermaidExtension";
+import { KatexBlockExtension, KatexInlineExtension } from "../extensions/KatexExtension";
 import { PageBreakExtension } from "../extensions/PageBreakExtension";
 import { FootnoteRef, FootnoteSection } from "../extensions/FootnoteExtension";
 import { DocumentSearchExtension } from "../extensions/DocumentSearchExtension";
 import { MoveBlockExtension } from "../extensions/MoveBlockExtension";
+import "katex/dist/katex.min.css";
 import type { VisualSearchMatch, VisualTextMap } from "../composables/useDocumentSearch";
 import { useI18n } from "../i18n";
 
@@ -484,6 +486,8 @@ const editor = useEditor({
       placeholder: t.value.placeholder,
     }),
     MermaidExtension,
+    KatexBlockExtension,
+    KatexInlineExtension,
     PageBreakExtension,
     FootnoteRef,
     FootnoteSection,

@@ -31,6 +31,10 @@
 
 ---
 
+> **说明：** 本仓库是 [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor) 的个人客制化分支（fork），加入了个人修改（例如 KaTeX 数学公式支持、PDF 导出调整等）。原始项目的所有功劳归 [Vesperino](https://github.com/Vesperino) 所有。本项目依 MIT 授权发布，详见 [LICENSE](LICENSE)。
+
+---
+
 ## 为什么选择 MerMark Editor？
 
 **MerMark Editor** 将 Markdown 的简洁性与 Mermaid 图表的强大功能融合在一个精美的原生桌面应用中。非常适合开发者、技术作者，以及任何需要使用流程图、时序图和其他可视化内容编写文档的人。

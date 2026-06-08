@@ -66,6 +66,12 @@ const en: Translations = {
   mermaid: 'Mermaid',
   insertMermaid: 'Insert Mermaid diagram',
 
+  // Toolbar - KaTeX math
+  katexBlock: 'Block Math',
+  katexInline: 'Inline Math',
+  insertKatexBlock: 'Insert block math ($$...$$)',
+  insertKatexInline: 'Insert inline math ($...$)',
+
   // Toolbar - Footnotes
   footnote: 'Footnote',
   insertFootnote: 'Insert footnote',

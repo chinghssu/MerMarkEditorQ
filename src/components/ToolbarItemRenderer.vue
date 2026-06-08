@@ -33,7 +33,6 @@ const emit = defineEmits<{
   saveFile: [];
   saveFileAs: [];
   exportPdf: [];
-  exportDocx: [];
   toggleCodeView: [];
   toggleSplit: [];
   toggleSplitEditor: [];
@@ -78,6 +77,8 @@ const {
   insertImageFromFile,
   showTokenMenu,
   insertMermaid,
+  insertKatexBlock,
+  insertKatexInline,
   insertFootnote,
   editor,
   t,
@@ -87,7 +88,7 @@ const needsEditor = (id: string) => {
   const editorItems = [
     'undo', 'redo', 'heading-select', 'bold', 'italic', 'strikethrough', 'inline-code',
     'bullet-list', 'ordered-list', 'task-list', 'blockquote', 'code-block', 'horizontal-rule',
-    'page-break', 'link', 'image', 'table', 'mermaid', 'footnote',
+    'page-break', 'link', 'image', 'table', 'mermaid', 'katex-block', 'katex-inline', 'footnote',
   ];
   return editorItems.includes(id);
 };
@@ -167,15 +168,6 @@ const showLabel = (id: string) => {
       <path d="M9 15l3 3 3-3"/>
     </svg>
     <span v-if="showLabel(itemId)">{{ t.exportPdf }}</span>
-  </button>
-
-  <button v-else-if="itemId === 'export-docx'" @click="emit('exportDocx')" class="toolbar-btn" :class="{ 'icon-only': !showLabel(itemId) }" v-tooltip="t.exportDocx" :disabled="isDisabled(itemId)">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-      <polyline points="14,2 14,8 20,8"/>
-      <path d="M9 12h6M9 16h4"/>
-    </svg>
-    <span v-if="showLabel(itemId)">{{ t.exportDocx }}</span>
   </button>
 
   <button v-else-if="itemId === 'show-shortcuts'" @click="emit('showShortcuts')" class="toolbar-btn icon-only shortcuts-btn" v-tooltip="`${t.keyboardShortcuts} (Ctrl+/)`">
@@ -398,6 +390,25 @@ const showLabel = (id: string) => {
       <line x1="12" y1="12" x2="12" y2="15"/>
     </svg>
     <span v-if="showLabel(itemId)">{{ t.mermaid }}</span>
+  </button>
+
+  <!-- KaTeX block math -->
+  <button v-else-if="itemId === 'katex-block'" @click="insertKatexBlock" class="toolbar-btn katex-btn" :class="{ 'icon-only': !showLabel(itemId) }" v-tooltip="t.insertKatexBlock" :disabled="isDisabled(itemId)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <text x="2" y="16" font-size="13" font-weight="bold" fill="currentColor" stroke="none" font-family="serif">∑</text>
+      <line x1="1" y1="19" x2="23" y2="19" stroke-width="1.5"/>
+      <line x1="1" y1="5" x2="23" y2="5" stroke-width="1.5"/>
+    </svg>
+    <span v-if="showLabel(itemId)">{{ t.katexBlock }}</span>
+  </button>
+
+  <!-- KaTeX inline math -->
+  <button v-else-if="itemId === 'katex-inline'" @click="insertKatexInline" class="toolbar-btn katex-btn" :class="{ 'icon-only': !showLabel(itemId) }" v-tooltip="t.insertKatexInline" :disabled="isDisabled(itemId)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <text x="4" y="16" font-size="13" font-weight="bold" fill="currentColor" stroke="none" font-family="serif">∫</text>
+      <text x="13" y="13" font-size="9" fill="currentColor" stroke="none" font-family="serif">x</text>
+    </svg>
+    <span v-if="showLabel(itemId)">{{ t.katexInline }}</span>
   </button>
 
   <!-- Footnote -->
@@ -656,6 +667,9 @@ const showLabel = (id: string) => {
 
 .footnote-btn { background: var(--mermaid-bg); border-color: var(--mermaid-border); color: var(--mermaid-color); }
 .footnote-btn:hover { background: var(--mermaid-hover-bg); border-color: var(--mermaid-hover-border); }
+
+.katex-btn { background: var(--mermaid-bg); border-color: var(--mermaid-border); color: var(--mermaid-color); }
+.katex-btn:hover { background: var(--mermaid-hover-bg); border-color: var(--mermaid-hover-border); }
 
 .shortcuts-btn { color: var(--text-muted); }
 .shortcuts-btn:hover { color: var(--text-primary); }

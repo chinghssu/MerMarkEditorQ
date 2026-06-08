@@ -315,6 +315,20 @@ export function extractCodeBlocks(
   }
   html += md.slice(cursor);
 
+  // KaTeX block math: $$...$$ (must run before inline $ to avoid conflicts)
+  html = html.replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => {
+    const placeholder = `__KATEX_BLOCK_${codeBlocks.length}__`;
+    codeBlocks.push(`<div data-type="katex-block" data-formula="${encodeURIComponent(formula.trim())}"></div>`);
+    return placeholder;
+  });
+
+  // KaTeX inline math: $...$  (single $, not $$)
+  html = html.replace(/(?<!\$)\$(?!\$)((?:[^$\n]|\\\$)+?)\$(?!\$)/g, (_, formula) => {
+    const placeholder = `__KATEX_INLINE_${codeBlocks.length}__`;
+    codeBlocks.push(`<span data-type="katex-inline" data-formula="${encodeURIComponent(formula.trim())}"></span>`);
+    return placeholder;
+  });
+
   // Generic fenced code blocks (\`\`\`lang ... \`\`\`). These run after mermaid
   // extraction so a remaining standard fence that happens to also be enabled
   // as a read format never reaches this pass.
@@ -332,6 +346,8 @@ export function restoreCodeBlocks(html: string, codeBlocks: string[]): string {
   let result = html;
   codeBlocks.forEach((block, index) => {
     result = result.replace(`__MERMAID_BLOCK_${index}__`, block);
+    result = result.replace(`__KATEX_BLOCK_${index}__`, block);
+    result = result.replace(`__KATEX_INLINE_${index}__`, block);
     result = result.replace(`__CODE_BLOCK_${index}__`, block);
   });
   return result;

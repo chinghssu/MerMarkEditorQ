@@ -31,6 +31,10 @@
 
 ---
 
+> **Note:** This is a customized fork of [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor) with personal modifications (e.g. KaTeX math support and PDF export tweaks). All credit for the original project goes to [Vesperino](https://github.com/Vesperino). Licensed under MIT — see [LICENSE](LICENSE).
+
+---
+
 ## Why MerMark Editor?
 
 **MerMark Editor** combines the simplicity of Markdown with the power of Mermaid diagrams in a beautiful, native desktop application. Perfect for developers, technical writers, and anyone who needs to create documentation with flowcharts, sequence diagrams, and other visualizations.
