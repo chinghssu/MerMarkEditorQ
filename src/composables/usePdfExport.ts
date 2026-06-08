@@ -6,7 +6,7 @@ import katex from 'katex';
 import { DOM_SELECTORS } from '../constants';
 import { t } from '../i18n';
 import { save as saveDialog, message as dialogMessage } from '@tauri-apps/plugin-dialog';
-import { writeTextFile, remove } from '@tauri-apps/plugin-fs';
+import { writeTextFile, remove, readFile } from '@tauri-apps/plugin-fs';
 import { Command } from '@tauri-apps/plugin-shell';
 import { join, tempDir } from '@tauri-apps/api/path';
 
@@ -493,6 +493,33 @@ function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
+const IMAGE_MIME_BY_EXT: Record<string, string> = {
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  gif: 'image/gif',
+  svg: 'image/svg+xml',
+  webp: 'image/webp',
+  bmp: 'image/bmp',
+  ico: 'image/x-icon',
+};
+
+/**
+ * Reads a local image file and returns a base64 data URI. wkhtmltopdf cannot
+ * reliably load `file://` resources (path encoding, sandboxing), so inlining the
+ * bytes is the dependable way to make local images appear in the exported PDF.
+ */
+async function fileToDataUrl(absolutePath: string): Promise<string | null> {
+  try {
+    const bytes = await readFile(absolutePath);
+    const ext = absolutePath.split('.').pop()?.toLowerCase() ?? '';
+    const mime = IMAGE_MIME_BY_EXT[ext] ?? 'image/png';
+    return await blobToDataUrl(new Blob([bytes], { type: mime }));
+  } catch {
+    return null;
+  }
+}
+
 function normalizeAssetName(name: string): string {
   const clean = name.split('?')[0].split('#')[0];
   const dot = clean.lastIndexOf('.');
@@ -608,11 +635,9 @@ async function inlineImageSources(html: string, baseDir: string | null): Promise
     if (!src) continue;
     if (/^data:/i.test(src) || /^https?:/i.test(src) || /^file:/i.test(src)) continue;
 
+    // Local images must be embedded as base64 data URIs: wkhtmltopdf cannot
+    // reliably load file:// resources, so otherwise they silently go missing.
     if (/^blob:/i.test(src)) {
-      if (originalSrc && !/^(https?:|data:|blob:|file:)/i.test(originalSrc) && baseDir) {
-        img.setAttribute('src', toFileUrl(resolveRelativePath(originalSrc, baseDir)));
-        continue;
-      }
       try {
         const response = await fetch(src);
         if (response.ok) {
@@ -620,7 +645,7 @@ async function inlineImageSources(html: string, baseDir: string | null): Promise
           continue;
         }
       } catch {
-        // Fall through to original source handling if possible.
+        // Fall through to original-path handling below.
       }
     }
 
@@ -628,7 +653,10 @@ async function inlineImageSources(html: string, baseDir: string | null): Promise
       ? originalSrc
       : src;
     if (baseDir) {
-      img.setAttribute('src', toFileUrl(resolveRelativePath(candidate, baseDir)));
+      const absolutePath = resolveRelativePath(candidate, baseDir);
+      const dataUrl = await fileToDataUrl(absolutePath);
+      // file:// is kept only as a last resort if the file could not be read.
+      img.setAttribute('src', dataUrl ?? toFileUrl(absolutePath));
     }
   }
 
