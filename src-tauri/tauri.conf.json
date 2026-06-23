@@ -88,9 +88,9 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDcyOThEMzhFM0ZBN0Q0MzYKUldRMjFLYy9qdE9ZY2hYTUZZcXB2UERCWXFMaDdjS1BaeThaWUJmVHVjUHlkMTdHU1J4blc5SEIK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZFNDkxMjkwNzZCNkNFQzAKUldUQXpyWjJrQkpKYnJkTU9sOFVPTlFXUVpDQWhBb2tCWWFkUXpJQWFRUVMySkFtY3p4b2FJdCsK",
       "endpoints": [
-        "https://github.com/Vesperino/MerMarkEditor/releases/latest/download/latest.json"
+        "https://github.com/chinghssu/MerMarkEditorQ/releases/latest/download/latest.json"
       ]
     },
     "deep-link": {

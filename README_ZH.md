@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/v/release/Vesperino/MerMarkEditor?style=flat" alt="發布"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Vesperino/MerMarkEditor?style=flat" alt="授權條款"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/stargazers"><img src="https://img.shields.io/github/stars/Vesperino/MerMarkEditor?style=flat" alt="星標"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/downloads/Vesperino/MerMarkEditor/total?style=flat&color=brightgreen&cacheSeconds=300" alt="下載量"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/v/release/chinghssu/MerMarkEditorQ?style=flat" alt="發布"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/blob/master/LICENSE"><img src="https://img.shields.io/github/license/chinghssu/MerMarkEditorQ?style=flat" alt="授權條款"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/stargazers"><img src="https://img.shields.io/github/stars/chinghssu/MerMarkEditorQ?style=flat" alt="星標"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/downloads/chinghssu/MerMarkEditorQ/total?style=flat&color=brightgreen&cacheSeconds=300" alt="下載量"></a>
   <a href="https://buymeacoffee.com/vesperinio"><img src="https://img.shields.io/badge/%E8%AB%8B%E6%88%91%E5%96%9D%E5%92%96%E5%95%A1-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="請我喝咖啡"></a>
 </p>
 
@@ -307,13 +307,13 @@
 
 ### 下載
 
-從 [發布頁面](https://github.com/Vesperino/MerMarkEditor/releases) 下載最新版本。
+從 [發布頁面](https://github.com/chinghssu/MerMarkEditorQ/releases) 下載最新版本。
 
 | 平台    | 下載                                                                                          |
 |---------|-----------------------------------------------------------------------------------------------|
-| Windows | [.exe / .msi 安裝程式](https://github.com/Vesperino/MerMarkEditor/releases/latest)             |
-| macOS   | [.dmg（通用：Apple Silicon + Intel）](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
-| Linux   | [.deb / .AppImage](https://github.com/Vesperino/MerMarkEditor/releases/latest)                |
+| Windows | [.exe / .msi 安裝程式](https://github.com/chinghssu/MerMarkEditorQ/releases/latest)             |
+| macOS   | [.dmg（通用：Apple Silicon + Intel）](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+| Linux   | [.deb / .AppImage](https://github.com/chinghssu/MerMarkEditorQ/releases/latest)                |
 
 ### 重要說明
 
@@ -323,6 +323,10 @@
 - **macOS**：右鍵點擊應用程式 →「打開」→「打開」以略過 Gatekeeper
 
 這是開源軟體在沒有付費程式碼簽署憑證的情況下散布時的標準行為。本儲存庫中的原始碼完全可供審閱。
+
+### 自動更新
+
+發佈建置會包含 Tauri updater metadata。macOS updater bundle 會在 CI 中用 updater private key 簽章，對應的 public key 存在 `src-tauri/tauri.conf.json`。`TAURI_SIGNING_PRIVATE_KEY` 與 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` 只能放在 GitHub Secrets 或本機 shell 環境變數中。完整流程請見 [docs/development/updater-signing.md](docs/development/updater-signing.md)。
 
 ### 系統需求
 
@@ -416,8 +420,8 @@ graph LR
 
 ```bash
 # 複製儲存庫
-git clone https://github.com/Vesperino/MerMarkEditor.git
-cd MerMarkEditor
+git clone https://github.com/chinghssu/MerMarkEditorQ.git
+cd MerMarkEditorQ
 
 # 安裝相依套件
 pnpm install
@@ -428,6 +432,18 @@ pnpm tauri dev
 # 生產建置
 pnpm tauri build
 ```
+
+### Updater 簽章
+
+需要產生 updater artifacts 的發佈建置，請先匯出 private key 與密碼：
+
+```bash
+export TAURI_SIGNING_PRIVATE_KEY="private key 內容"
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="key 密碼"
+pnpm tauri build
+```
+
+不要提交 private key、密碼、`.env` 檔或產生出來的 secret key 檔。CI 會從 `TAURI_SIGNING_PRIVATE_KEY` 與 `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` repository secrets 讀取簽章資訊。
 
 ### 執行測試
 

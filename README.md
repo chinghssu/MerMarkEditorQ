@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/v/release/Vesperino/MerMarkEditor?style=flat" alt="Release"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Vesperino/MerMarkEditor?style=flat" alt="License"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/stargazers"><img src="https://img.shields.io/github/stars/Vesperino/MerMarkEditor?style=flat" alt="Stars"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/downloads/Vesperino/MerMarkEditor/total?style=flat&color=brightgreen&cacheSeconds=300" alt="Downloads"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/v/release/chinghssu/MerMarkEditorQ?style=flat" alt="Release"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/blob/master/LICENSE"><img src="https://img.shields.io/github/license/chinghssu/MerMarkEditorQ?style=flat" alt="License"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/stargazers"><img src="https://img.shields.io/github/stars/chinghssu/MerMarkEditorQ?style=flat" alt="Stars"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/downloads/chinghssu/MerMarkEditorQ/total?style=flat&color=brightgreen&cacheSeconds=300" alt="Downloads"></a>
   <a href="https://buymeacoffee.com/vesperinio"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="Buy me a coffee"></a>
 </p>
 
@@ -307,13 +307,13 @@ The full feature list — including snapshot rotation, tmp-recovery on crashed s
 
 ### Download
 
-Download the latest version from the [Releases page](https://github.com/Vesperino/MerMarkEditor/releases).
+Download the latest version from the [Releases page](https://github.com/chinghssu/MerMarkEditorQ/releases).
 
 | Platform | Download |
 |----------|----------|
-| Windows  | [.exe / .msi installer](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
-| macOS    | [.dmg (universal: Apple Silicon + Intel)](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
-| Linux    | [.deb / .AppImage](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
+| Windows  | [.exe / .msi installer](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+| macOS    | [.dmg (universal: Apple Silicon + Intel)](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+| Linux    | [.deb / .AppImage](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
 
 ### Important Note
 
@@ -323,6 +323,10 @@ This app is open-source and not code-signed. Your OS may show a security warning
 - **macOS**: Right-click the app → "Open" → "Open" to bypass Gatekeeper
 
 This is standard behavior for open-source software distributed without a paid code signing certificate. The source code is fully available for review in this repository.
+
+### Automatic Updates
+
+Release builds include Tauri updater metadata. macOS updater bundles are signed with the updater private key in CI, while the matching public key is stored in `src-tauri/tauri.conf.json`. Keep `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in GitHub Secrets or local shell environment only. See [docs/development/updater-signing.md](docs/development/updater-signing.md) for the release flow.
 
 ### System Requirements
 
@@ -416,8 +420,8 @@ This creates a flowchart:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Vesperino/MerMarkEditor.git
-cd MerMarkEditor
+git clone https://github.com/chinghssu/MerMarkEditorQ.git
+cd MerMarkEditorQ
 
 # Install dependencies
 pnpm install
@@ -428,6 +432,18 @@ pnpm tauri dev
 # Build for production
 pnpm tauri build
 ```
+
+### Updater Signing
+
+For release builds that generate updater artifacts, export the private key and password before building:
+
+```bash
+export TAURI_SIGNING_PRIVATE_KEY="contents of the private key"
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="your key password"
+pnpm tauri build
+```
+
+Never commit the private key, password, `.env` files, or generated secret key files. CI expects the values in `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` repository secrets.
 
 ### Running Tests
 

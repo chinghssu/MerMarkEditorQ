@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/v/release/Vesperino/MerMarkEditor?style=flat" alt="Wersja"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Vesperino/MerMarkEditor?style=flat" alt="Licencja"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/stargazers"><img src="https://img.shields.io/github/stars/Vesperino/MerMarkEditor?style=flat" alt="Gwiazdki"></a>
-  <a href="https://github.com/Vesperino/MerMarkEditor/releases"><img src="https://img.shields.io/github/downloads/Vesperino/MerMarkEditor/total?style=flat&color=brightgreen&cacheSeconds=300" alt="Pobrania"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/v/release/chinghssu/MerMarkEditorQ?style=flat" alt="Wersja"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/blob/master/LICENSE"><img src="https://img.shields.io/github/license/chinghssu/MerMarkEditorQ?style=flat" alt="Licencja"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/stargazers"><img src="https://img.shields.io/github/stars/chinghssu/MerMarkEditorQ?style=flat" alt="Gwiazdki"></a>
+  <a href="https://github.com/chinghssu/MerMarkEditorQ/releases"><img src="https://img.shields.io/github/downloads/chinghssu/MerMarkEditorQ/total?style=flat&color=brightgreen&cacheSeconds=300" alt="Pobrania"></a>
   <a href="https://buymeacoffee.com/vesperinio"><img src="https://img.shields.io/badge/Postaw_mi_kaw%C4%99-FFDD00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="Postaw mi kawę"></a>
 </p>
 
@@ -307,13 +307,17 @@ Pełna lista funkcji — łącznie z rotacją snapshotów, recovery tmp po zawie
 
 ### Pobieranie
 
-Pobierz najnowszą wersję ze [strony wydań](https://github.com/Vesperino/MerMarkEditor/releases).
+Pobierz najnowszą wersję ze [strony wydań](https://github.com/chinghssu/MerMarkEditorQ/releases).
 
 | Platforma | Pobierz |
 |-----------|---------|
-| Windows   | [.exe / .msi installer](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
-| macOS     | [.dmg (universal: Apple Silicon + Intel)](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
-| Linux     | [.deb / .AppImage](https://github.com/Vesperino/MerMarkEditor/releases/latest) |
+| Windows   | [.exe / .msi installer](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+| macOS     | [.dmg (universal: Apple Silicon + Intel)](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+| Linux     | [.deb / .AppImage](https://github.com/chinghssu/MerMarkEditorQ/releases/latest) |
+
+### Automatyczne aktualizacje
+
+Buildy wydaniowe zawierają metadane Tauri updatera. Paczki updatera dla macOS są podpisywane w CI prywatnym kluczem updatera, a odpowiadający mu klucz publiczny znajduje się w `src-tauri/tauri.conf.json`. Przechowuj `TAURI_SIGNING_PRIVATE_KEY` i `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` tylko w GitHub Secrets albo lokalnych zmiennych środowiskowych. Pełny proces opisuje [docs/development/updater-signing.md](docs/development/updater-signing.md).
 
 ### Wymagania systemowe
 
@@ -407,8 +411,8 @@ To tworzy diagram przepływu:
 
 ```bash
 # Sklonuj repozytorium
-git clone https://github.com/Vesperino/MerMarkEditor.git
-cd MerMarkEditor
+git clone https://github.com/chinghssu/MerMarkEditorQ.git
+cd MerMarkEditorQ
 
 # Zainstaluj zależności
 pnpm install
@@ -419,6 +423,18 @@ pnpm tauri dev
 # Zbuduj wersję produkcyjną
 pnpm tauri build
 ```
+
+### Podpis updatera
+
+Przy buildach wydaniowych generujących artefakty updatera wyeksportuj prywatny klucz i hasło przed budowaniem:
+
+```bash
+export TAURI_SIGNING_PRIVATE_KEY="zawartosc prywatnego klucza"
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="haslo klucza"
+pnpm tauri build
+```
+
+Nie commituj prywatnego klucza, hasła, plików `.env` ani wygenerowanych plików secret key. CI oczekuje tych wartości w sekretach repozytorium `TAURI_SIGNING_PRIVATE_KEY` i `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`.
 
 ### Uruchamianie testów
 
