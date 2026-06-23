@@ -59,6 +59,7 @@
               <option value="narrow">{{ t.pdfMarginNarrow }}</option>
               <option value="normal">{{ t.pdfMarginNormal }}</option>
               <option value="wide">{{ t.pdfMarginWide }}</option>
+              <option value="academic">{{ t.pdfMarginAcademic }}</option>
               <option value="custom">{{ t.pdfMarginCustom }}</option>
             </select>
           </label>
@@ -366,6 +367,7 @@ const PRESET_MARGINS_FULL: Record<string, { top: number; right: number; bottom: 
   narrow: { top: 10, right: 10, bottom: 14, left: 10 },
   normal: { top: 18, right: 18, bottom: 22, left: 18 },
   wide:   { top: 25, right: 25, bottom: 28, left: 25 },
+  academic: { top: 25.4, right: 25.4, bottom: 25.4, left: 25.4 },
 };
 
 const effectiveMargins = computed(() => {

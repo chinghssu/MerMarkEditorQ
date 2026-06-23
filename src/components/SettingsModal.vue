@@ -21,6 +21,7 @@ const {
   setEditorFontFamily,
   setCodeFontFamily,
   setEditorLineHeight,
+  setDocumentLayout,
   setEditorPaddingTop,
   setEditorPaddingBottom,
   setEditorPaddingX,
@@ -585,6 +586,28 @@ onUnmounted(() => {
 
           <!-- Editor Tab -->
           <div v-if="activeTab === 'editor'" class="settings-section">
+            <div class="setting-row">
+              <label class="setting-label">{{ t.documentLayout }}</label>
+              <div class="setting-control">
+                <div class="toggle-group">
+                  <button
+                    class="toggle-option"
+                    :class="{ active: settings.documentLayout !== 'academic' }"
+                    @click="setDocumentLayout('standard')"
+                  >
+                    {{ t.documentLayoutStandard }}
+                  </button>
+                  <button
+                    class="toggle-option"
+                    :class="{ active: settings.documentLayout === 'academic' }"
+                    @click="setDocumentLayout('academic')"
+                  >
+                    {{ t.documentLayoutAcademic }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div class="setting-row">
               <label class="setting-label">{{ t.editorFont }}</label>
               <div class="setting-control">

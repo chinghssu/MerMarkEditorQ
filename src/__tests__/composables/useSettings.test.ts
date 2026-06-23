@@ -153,6 +153,17 @@ describe('useSettings', () => {
 
       setEditorLineHeight(1.6);
     });
+
+    it('should switch document layout modes', () => {
+      const { settings, setDocumentLayout } = useSettings();
+      setDocumentLayout('academic');
+      expect(settings.value.documentLayout).toBe('academic');
+      expect(document.documentElement.getAttribute('data-doc-layout')).toBe('academic');
+
+      setDocumentLayout('standard');
+      expect(settings.value.documentLayout).toBe('standard');
+      expect(document.documentElement.getAttribute('data-doc-layout')).toBe('standard');
+    });
   });
 
   describe('expand tabs setting', () => {

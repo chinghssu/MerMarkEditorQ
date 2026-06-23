@@ -80,7 +80,7 @@ export interface PdfWatermark {
   size: string;
 }
 
-export type MarginPreset = 'narrow' | 'normal' | 'wide' | 'custom';
+export type MarginPreset = 'narrow' | 'normal' | 'wide' | 'academic' | 'custom';
 
 export interface CustomMargins {
   top: number;
@@ -168,6 +168,7 @@ function resolveMargins(settings: PdfSettings): Margins {
   }
   switch (settings.margins) {
     case 'narrow': return { top: '10mm', right: '10mm', bottom: '14mm', left: '10mm' };
+    case 'academic': return { top: '25.4mm', right: '25.4mm', bottom: '25.4mm', left: '25.4mm' };
     case 'wide':   return { top: '25mm', right: '25mm', bottom: '28mm', left: '25mm' };
     default:       return { top: '18mm', right: '18mm', bottom: '22mm', left: '18mm' };
   }

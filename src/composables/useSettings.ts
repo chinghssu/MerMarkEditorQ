@@ -20,6 +20,7 @@ export type ThemeVariant = 'default' | 'minimal';
 export type CodeThemeMode = 'dark' | 'white';
 export type CliKind = 'claude' | 'codex';
 export type PanelSide = 'left' | 'right';
+export type DocumentLayoutMode = 'standard' | 'academic';
 
 /** A workspace currently pinned in the sidebar (one of N concurrent roots). */
 export interface OpenWorkspaceEntry {
@@ -130,6 +131,7 @@ export interface AppSettings {
   editorFontFamily: string;
   codeFontFamily: string;
   editorLineHeight: number;
+  documentLayout: DocumentLayoutMode;
   spellcheck: boolean;
   expandTabs: boolean;
   showLineNumbers: boolean;
@@ -161,7 +163,7 @@ export interface AppSettings {
 }
 
 export const EDITOR_PAD_TOP_MIN = 0;
-export const EDITOR_PAD_TOP_MAX = 80;
+export const EDITOR_PAD_TOP_MAX = 160;
 export const EDITOR_PAD_BOTTOM_MIN = 0;
 export const EDITOR_PAD_BOTTOM_MAX = 160;
 export const EDITOR_PAD_X_MIN = 0;
@@ -349,13 +351,14 @@ function getDefaultSettings(): AppSettings {
     editorFontFamily: 'system',
     codeFontFamily: 'fira-code',
     editorLineHeight: 1.6,
+    documentLayout: 'standard',
     spellcheck: false,
     expandTabs: false,
     showLineNumbers: false,
     leftBarExpanded: false,
-    editorPaddingTop: 16,
-    editorPaddingBottom: 32,
-    editorPaddingX: 24,
+    editorPaddingTop: 96,
+    editorPaddingBottom: 96,
+    editorPaddingX: 96,
     mermaidFenceOpen: DEFAULT_MERMAID_DELIMITERS.open,
     mermaidFenceClose: DEFAULT_MERMAID_DELIMITERS.close,
     mermaidWriteFormatId: STANDARD_FORMAT_ID,
@@ -533,6 +536,11 @@ export function useSettings() {
     applyCssVars(settings.value);
   };
 
+  const setDocumentLayout = (mode: DocumentLayoutMode) => {
+    settings.value.documentLayout = mode === 'academic' ? 'academic' : 'standard';
+    applyCssVars(settings.value);
+  };
+
   const setSpellcheck = (value: boolean) => {
     settings.value.spellcheck = value;
   };
@@ -662,6 +670,7 @@ export function useSettings() {
     setEditorFontFamily,
     setCodeFontFamily,
     setEditorLineHeight,
+    setDocumentLayout,
     setSpellcheck,
     setExpandTabs,
     setShowLineNumbers,
@@ -752,15 +761,16 @@ function applyCodeThemeVars(root: CSSStyleDeclaration, theme: CodeThemeMode) {
 
 // Apply all CSS custom properties to document root
 function applyCssVars(s: AppSettings) {
+  document.documentElement.setAttribute('data-doc-layout', s.documentLayout === 'academic' ? 'academic' : 'standard');
   const root = document.documentElement.style;
   root.setProperty('--editor-font-family', resolveEditorFont(s.editorFontFamily));
   root.setProperty('--code-font-family', resolveCodeFont(s.codeFontFamily));
   root.setProperty('--editor-line-height', `${s.editorLineHeight}`);
   // Editor surface paddings — picked up by the Minimal theme via
   // `padding: var(--editor-pad-top) var(--editor-pad-x) ...`.
-  root.setProperty('--editor-pad-top', `${s.editorPaddingTop ?? 16}px`);
-  root.setProperty('--editor-pad-bottom', `${s.editorPaddingBottom ?? 32}px`);
-  root.setProperty('--editor-pad-x', `${s.editorPaddingX ?? 24}px`);
+  root.setProperty('--editor-pad-top', `${s.editorPaddingTop ?? 96}px`);
+  root.setProperty('--editor-pad-bottom', `${s.editorPaddingBottom ?? 96}px`);
+  root.setProperty('--editor-pad-x', `${s.editorPaddingX ?? 96}px`);
   applyCodeThemeVars(root, s.codeTheme);
 }
 

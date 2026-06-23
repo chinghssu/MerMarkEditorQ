@@ -931,6 +931,11 @@ defineExpose({
   margin: 20px auto;
 }
 
+html[data-doc-layout="academic"] .editor-content-wrapper {
+  max-width: 210mm;
+  margin: 24px auto;
+}
+
 .editor-content-wrapper.has-line-numbers {
   --editor-gutter-width: 3.5em;
 }
@@ -946,10 +951,35 @@ defineExpose({
   /* User-tunable paddings (Settings → Editor → Padding). Defaults defined
      in useSettings; the var fallbacks here only matter on first paint
      before applyCssVars runs. */
-  padding: var(--editor-pad-top, 16px) var(--editor-pad-x, 24px) var(--editor-pad-bottom, 32px);
+  padding: var(--editor-pad-top, 96px) var(--editor-pad-x, 96px) var(--editor-pad-bottom, 96px);
   min-height: calc(100vh - 180px);
   box-shadow: var(--shadow-sm);
   border-radius: 4px;
+}
+
+html[data-doc-layout="academic"] .editor-content {
+  padding: 25.4mm;
+  min-height: calc(297mm - 50.8mm);
+  border-radius: 2px;
+}
+
+html[data-doc-layout="academic"] .editor-content-wrapper.has-line-numbers .editor-content {
+  padding-left: calc(25.4mm + var(--editor-gutter-width));
+}
+
+@media (max-width: 860px) {
+  html[data-doc-layout="academic"] .editor-content-wrapper {
+    max-width: calc(100% - 24px);
+    margin: 12px auto;
+  }
+
+  html[data-doc-layout="academic"] .editor-content {
+    padding: 18mm 12mm;
+  }
+
+  html[data-doc-layout="academic"] .editor-content-wrapper.has-line-numbers .editor-content {
+    padding-left: calc(12mm + var(--editor-gutter-width));
+  }
 }
 
 .editor-content .tiptap {

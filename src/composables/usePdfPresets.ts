@@ -32,6 +32,20 @@ const BUILTIN_PRESET_SETTINGS: Record<string, PdfSettings> = {
     showPageNumbers: true,
     pageNumberFormat: 'n',
   },
+  'builtin-academic': {
+    ...PDF_SETTINGS_DEFAULTS,
+    fontSize: '11pt',
+    margins: 'academic',
+    pageSize: 'A4',
+    fontFamily: 'times',
+    headingFontFamily: 'times',
+    accentColor: '#111827',
+    tableHeaderBg: '#f3f4f6',
+    header: { ...PDF_SETTINGS_DEFAULTS.header, enabled: false },
+    footer: { enabled: true, left: '', center: '', right: '{page}/{pages}' },
+    showPageNumbers: false,
+    pageNumberFormat: 'n-of-total',
+  },
   'builtin-draft': {
     ...PDF_SETTINGS_DEFAULTS,
     watermark: { ...PDF_SETTINGS_DEFAULTS.watermark, enabled: true, text: 'DRAFT' },
@@ -42,6 +56,7 @@ function builtinPresets(): PdfPreset[] {
   return [
     { id: 'builtin-report', name: t.value.pdfPresetReport, settings: BUILTIN_PRESET_SETTINGS['builtin-report'] },
     { id: 'builtin-notes',  name: t.value.pdfPresetNotes,  settings: BUILTIN_PRESET_SETTINGS['builtin-notes'] },
+    { id: 'builtin-academic', name: t.value.pdfPresetAcademic, settings: BUILTIN_PRESET_SETTINGS['builtin-academic'] },
     { id: 'builtin-draft',  name: t.value.pdfPresetDraft,  settings: BUILTIN_PRESET_SETTINGS['builtin-draft'] },
   ];
 }

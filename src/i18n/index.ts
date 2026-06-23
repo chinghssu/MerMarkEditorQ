@@ -194,6 +194,9 @@ export interface Translations {
   codeFont: string;
   codeTheme: string;
   lineHeight: string;
+  documentLayout: string;
+  documentLayoutStandard: string;
+  documentLayoutAcademic: string;
   editorPaddingTop: string;
   editorPaddingBottom: string;
   editorPaddingX: string;
@@ -562,6 +565,7 @@ export interface Translations {
   pdfMarginNarrow: string;
   pdfMarginNormal: string;
   pdfMarginWide: string;
+  pdfMarginAcademic: string;
   pdfMarginCustom: string;
   pdfMarginTop: string;
   pdfMarginRight: string;
@@ -602,6 +606,7 @@ export interface Translations {
   pdfBtnSave: string;
   pdfPresetReport: string;
   pdfPresetNotes: string;
+  pdfPresetAcademic: string;
   pdfPresetDraft: string;
   pdfTabToc: string;
   pdfShowToc: string;
