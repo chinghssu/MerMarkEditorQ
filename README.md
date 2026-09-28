@@ -31,6 +31,12 @@
 
 ---
 
+## Archived
+
+This fork is no longer actively maintained. Its updates have been contributed to the [original MerMark Editor project](https://github.com/Vesperino/MerMarkEditor). Please use the original project for current development and releases.
+
+---
+
 ## ⚠️ How this fork differs from the original
 
 This is a personal customized fork of [Vesperino/MerMarkEditor](https://github.com/Vesperino/MerMarkEditor). All credit for the original project goes to [Vesperino](https://github.com/Vesperino). This fork is released under the MIT license — see [LICENSE](LICENSE).
